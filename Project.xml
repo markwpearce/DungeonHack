@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="DungeonSlash" file="DungeonSlash" main="Main" version="0.0.1" company="HaxeFlixel" />
+	<app title="DungeonHack" file="DungeonHack" main="Main" version="0.0.1" company="HaxeFlixel" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
@@ -77,6 +77,9 @@
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 
 	<!-- _________________________________ Custom _______________________________ -->
+
+	<haxedef name="no-inline" if="neko"/>
+	<haxedef name="dce=full" if="neko"/>
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 </project>
