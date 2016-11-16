@@ -1,9 +1,10 @@
 {
     "version": "0.1.0",
     "command": "haxelib",
-    "args": ["run", "lime", "test"],
-    "tasks": [
-        {
+    "showOutput": "always",
+    "isShellCommand": true,
+    "args": ["run", "lime", "test", "-verbose"],
+    "tasks": [{
             "taskName": "flash release",
             "suppressTaskName": true,
             "args": ["flash"],
@@ -25,7 +26,6 @@
             "taskName": "flash debug",
             "suppressTaskName": true,
             "args": ["flash", "-Ddebug"],
-            "isBuildCommand": true,
             "problemMatcher": {
                 "owner": "haxe",
                 "pattern": {
@@ -97,6 +97,7 @@
         {
             "taskName": "neko debug",
             "suppressTaskName": true,
+            "isBuildCommand": true,
             "args": ["neko", "-Ddebug"],
             "problemMatcher": {
                 "owner": "haxe",

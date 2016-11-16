@@ -64,7 +64,7 @@ class TiledLevel extends TiledMap
 		// Load Tile Maps
 		for (layer in layers)
 		{
-		
+			if(layer.name == "Navigation") continue;
 			
 			if (layer.type != TiledLayerType.TILE) continue;
 			var tileLayer:TiledTileLayer = cast layer;

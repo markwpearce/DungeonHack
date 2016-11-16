@@ -309,7 +309,10 @@
    <ellipse/>
   </object>
  </objectgroup>
- <layer name="Navigation" width="16" height="16">
+ <layer name="Navigation" width="16" height="16" visible="0">
+  <properties>
+   <property name="tileset" value="navigationtile"/>
+  </properties>
   <data encoding="csv">
 737,737,737,737,737,737,737,737,737,737,737,737,737,737,737,737,
 737,737,737,0,0,0,0,0,0,0,0,0,0,0,0,737,

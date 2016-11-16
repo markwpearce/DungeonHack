@@ -15,7 +15,7 @@ class Player extends Character
   
   public function new(?X:Float=0, ?Y:Float=0)
   {
-      super(200, X, Y, AssetPaths.orc_regular_0__png);
+      super(200, X, Y, AssetPaths.female_hero_knight__png);
   }
   
   override public function update(elapsed:Float):Void
