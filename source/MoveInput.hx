@@ -148,7 +148,7 @@ class MoveInput
       magnitude = 1.0;
     }
     else {
-      magnitude = Math.sqrt(xAxis*xAxis + yAxis*yAxis);
+      magnitude = Math.max(1.0, Math.sqrt(xAxis*xAxis + yAxis*yAxis));
     }
    
     return magnitude;

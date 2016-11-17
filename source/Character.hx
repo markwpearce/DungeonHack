@@ -206,15 +206,13 @@ class Character extends FlxNapeSprite
       pointing = direction;
       direction.setDirectionAndAngle(this);
       var angleRad = direction.angle;
-      speedPercentage = Math.min(direction.magnitude, speedPercentage);
-      //trace("speed %: "+speedPercentage);
+      speedPercentage = Math.max(0, Math.min(direction.magnitude, speedPercentage));
       body.velocity.set(new nape.geom.Vec2(getNormalizedSpeed(elapsed, speedPercentage), 0));
       body.velocity.rotate(angleRad);
       playAnimation("move");
     } 
     else {
       body.velocity.set(new nape.geom.Vec2(0, 0));
-      
       playAnimation("idle");
     }
   
