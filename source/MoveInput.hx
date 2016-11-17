@@ -15,6 +15,7 @@ class MoveInput
   public var xAxis: Float;
   public var yAxis: Float;
   public var angle: Float;
+  public var magnitude: Float;
 
   public function new(u:Bool=false, d:Bool=false, l:Bool=false, r:Bool=false, ?tar:FlxPoint, x:Float = 0, y:Float=0) {
     up = u;
@@ -51,20 +52,20 @@ class MoveInput
     return !up && !down && !left && !right && target == null && xAxis == 0 && yAxis == 0; 
   }
 
-  public function setDirectionAndAngle(sprite: FlxSprite):Void
+  public function setDirectionAndAngle(?sprite: FlxSprite):Void
   {
-    if(target != null) {
-
+    if(target != null && sprite != null) {
       angle = FlxAngle.angleBetweenPoint(sprite, target);
       setDirectionFromAngle();
     }
-    else if(xAxis != 0 && yAxis != 0) {
-      angle =  Math.atan2(yAxis, xAxis);
-      setDirectionFromAngle();
+    else if(xAxis != 0 || yAxis != 0) {
+      angle =  FlxAngle.wrapAngle(Math.atan2(yAxis, xAxis));
+      setDirectionFromAngle();      
     }
     else {
       setAngleFromDirection();
     }
+    setMagnitude();
   }
 
   private function setDirectionFromAngle(): Void 
@@ -139,6 +140,18 @@ class MoveInput
     }
     angle = mA;
     return angle;
+  }
+
+
+  private function setMagnitude(): Float {
+    if(xAxis == 0 && yAxis == 0) {
+      magnitude = 1.0;
+    }
+    else {
+      magnitude = Math.sqrt(xAxis*xAxis + yAxis*yAxis);
+    }
+   
+    return magnitude;
   }
 
 }

@@ -20,7 +20,12 @@ class Player extends Character
   
   override public function update(elapsed:Float):Void
   {
-     movement(elapsed);
+     if(getMelee()) {
+       characterMelee();
+     }
+     else {
+       movement(elapsed);
+     }
      super.update(elapsed);
   }
 
@@ -30,6 +35,9 @@ class Player extends Character
     var _down:Bool = false;
     var _left:Bool = false;
     var _right:Bool = false;
+    var gpX:Float = 0;
+    var gpY:Float = 0;
+    
     _up = FlxG.keys.anyPressed([UP, W]);
     _down = FlxG.keys.anyPressed([DOWN, S]);
     _left = FlxG.keys.anyPressed([LEFT, A]);
@@ -37,14 +45,18 @@ class Player extends Character
 
     if(FlxG.gamepads.lastActive != null) {
       var gp = FlxG.gamepads.lastActive;
-      var gpX = gp.getXAxis(FlxGamepadInputID.LEFT_ANALOG_STICK);
-      var gpY = gp.getXAxis(FlxGamepadInputID.LEFT_ANALOG_STICK);
+      gpX = gp.getXAxis(FlxGamepadInputID.LEFT_ANALOG_STICK);
+      gpY = gp.getYAxis(FlxGamepadInputID.LEFT_ANALOG_STICK);
       var deadZone:Float = 0.1;
       
-      _up = _up || gpY > deadZone;
-      _down = _down || gpY < -deadZone;
-      _left = _left || gpX > deadZone;
-      _right = _right || gpX < deadZone;
+      _up = _up || gpY < -deadZone;
+      _down = _down || gpY > deadZone;
+      _left = _left || gpX < -deadZone;
+      _right = _right || gpX > deadZone;
+      
+      if(gpX!= 0 || gpY!=0) {
+        return MoveInput.newAxis(gpX, gpY);
+      }
     }
     if (_up && _down)
       _up = _down = false;
@@ -52,6 +64,16 @@ class Player extends Character
       _left = _right = false;
 
     return MoveInput.newDirection(_up, _down, _left, _right);
+  }
+
+  private function getMelee():Bool {
+    var attack = FlxG.keys.anyJustPressed([SPACE]);
+    if(!attack && FlxG.gamepads.lastActive != null) {
+      var gp = FlxG.gamepads.lastActive;
+      attack = gp.anyJustPressed([FlxGamepadInputID.X]);
+    }
+
+    return attack;
   }
 
   private function movement(elapsed: Float):Void

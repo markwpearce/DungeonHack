@@ -12,14 +12,33 @@ import nape.geom.RayResult;
 import nape.geom.Vec2;
 
 
+typedef WeaponStats = {
+  cooldown: Float, //seconds
+  maxDamage: Float, //maxDamage
+  distance: Float, //pixels
+  critChance: Float, //chance of double damage
+  missChance: Float, //chance of no damage
+};
+
+
+
 class Character extends FlxNapeSprite
 {
   public var maxSpeed:Float = 200;
+  
   public var pointing:MoveInput;
 
   private var navigationTileMap: FlxTilemap =null;
   private var distanceToTargetThreshold: Float = 50;
 
+
+  private var cooldowns: Map<String, Float>;
+
+  private var animFPS:Int = 10;
+  private var waitForAnimationToFinish:Bool = false;
+
+  private var meleeStats: WeaponStats;
+  
 
   public function new(maxSpeedVal:Float=200, X:Float=0, Y:Float=0, ?characterSpriteSheet:FlxGraphicAsset, spriteWidth:Int=128, spriteHeight:Int=128)
   {
@@ -32,14 +51,56 @@ class Character extends FlxNapeSprite
       body.space = FlxNapeSpace.space;
       body.allowMovement = true;
       body.allowRotation = false;
-      
+      cooldowns = ["melee" => 0];
+      setMelee();
       maxSpeed = maxSpeedVal;
       addAnimation("idle", 0, 4, true);
       addAnimation("move", 4, 8);
+      addAnimation("melee", 12, 4);
+  }
+
+
+  private function applyCooldown(elapsed:Float): Void 
+  {
+    for (key in cooldowns.keys()) {
+      if(cooldowns[key] > 0) {
+        cooldowns[key] = Math.max(0, cooldowns[key]-elapsed);
+      } 
+    }
+  }
+
+
+  public function setMelee(_cooldown: Float= 0.5, _maxDamage: Float = 10, _distance:Float = 50, _critChance:Float = 0.05, _missChance:Float =0.1) {
+    meleeStats = {
+      cooldown: _cooldown,
+      maxDamage: _maxDamage,
+      distance: _distance,
+      critChance: _critChance,
+      missChance:_missChance
+    };
+  }
+
+  /*  Damage is 0 if miss
+      is between 0.25*maxDamage and maxDamage
+      double if crit
+  */
+  public function rollForDamage(stats: WeaponStats):Int {
+    if(Math.random() < stats.missChance) {
+      return 0;
+    }
+    var crit = (Math.random() < stats.critChance);
+    var damage = Math.random()*(stats.maxDamage);
+    damage = Math.max(damage, stats.maxDamage/4);
+    if(crit) {
+      damage = Math.max(damage, stats.maxDamage/2);
+      damage *= 2;
+    }
+    return Math.round(damage);
   }
   
   override public function update(elapsed:Float):Void
   {
+     applyCooldown(elapsed);
      super.update(elapsed);
   }
 
@@ -56,7 +117,7 @@ class Character extends FlxNapeSprite
       if(pingPong) {
         frames = frames.concat([for (j in 0...(animEnd-animStart)) animEnd-1-j]);
       }
-      animation.add(animName, frames, 10, false);
+      animation.add(animName, frames, animFPS, false);
     }
   }
 
@@ -132,12 +193,21 @@ class Character extends FlxNapeSprite
   }
 
   public function characterMove(elapsed: Float, ?direction:MoveInput, speedPercentage: Float = 1.0) {
+    if(waitForAnimationToFinish) {
+      if(animation.finished) {
+        waitForAnimationToFinish = false;
+      }
+      else {
+        return;
+      }
+    }
     if(direction != null && (!direction.isEmpty()))
     {
       pointing = direction;
       direction.setDirectionAndAngle(this);
       var angleRad = direction.angle;
-     
+      speedPercentage = Math.min(direction.magnitude, speedPercentage);
+      //trace("speed %: "+speedPercentage);
       body.velocity.set(new nape.geom.Vec2(getNormalizedSpeed(elapsed, speedPercentage), 0));
       body.velocity.rotate(angleRad);
       playAnimation("move");
@@ -149,5 +219,33 @@ class Character extends FlxNapeSprite
     }
   
   }
+
+  public function checkIfCool(key: String, coolDownTime:Float = 0.5, animate:Bool=false): Bool
+  {
+    if(cooldowns[key] <= 0) {
+      if(animate) {
+        playAnimation(key);
+        cooldowns[key] = coolDownTime;
+        body.velocity.set(new nape.geom.Vec2(0, 0));
+        waitForAnimationToFinish = true;
+      }
+      return true;
+    }
+    return false;
+  }
+
+
+  public function characterMelee():Bool {
+    var meleed = checkIfCool("melee", meleeStats.cooldown, true);
+    
+    if(meleed) {
+      //check forward direction quarter circle for enemies
+      //roll for damage on each
+      
+    }
+    return meleed;
+
+  }
+
 
 }
