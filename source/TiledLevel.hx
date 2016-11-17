@@ -39,7 +39,7 @@ class TiledLevel extends TiledMap
 	public var objectsLayer: FlxTypedGroup<FlxSprite>;
 	public var backgroundLayer:FlxGroup;
 	public var collisionMeshes:Array<Shape>;
-	private var collidableTileLayers:Array<FlxTilemap>;
+	public var navigationMap:FlxTilemap;
 
 	
 	// Sprites of images layers
@@ -64,7 +64,7 @@ class TiledLevel extends TiledMap
 		// Load Tile Maps
 		for (layer in layers)
 		{
-			if(layer.name == "Navigation") continue;
+			//if(layer.name == "Navigation") continue;
 			
 			if (layer.type != TiledLayerType.TILE) continue;
 			var tileLayer:TiledTileLayer = cast layer;
@@ -122,21 +122,26 @@ class TiledLevel extends TiledMap
 			}
 			*/
 			
-			if (tileLayer.properties.contains("nocollide"))
+			if (tileLayer.properties.contains("nocollide")
+				&& tileLayer.properties.get("nocollide") == "true")
 			{
 				backgroundLayer.add(tilemap);
 			}
-			else
+			else if(tileLayer.name == "Navigation")
 			{
-				FlxG.log.add("3");
-				FlxG.log.add(tilemap);
-
-				if (collidableTileLayers == null)
-					collidableTileLayers = new Array<FlxTilemap>();
-				
-				foregroundTiles.add(tilemap);
-				collidableTileLayers.push(tilemap);
+				trace("Found navigation layer");
+				if(navigationMap == null) {
+					navigationMap = tilemap;
+				}
+				else {
+					throw "More than one navigation tile map found";
+		
+				}
 			}
+		}
+
+		if(navigationMap == null) {
+				throw "No navigation map found";
 		}
 	}
 
@@ -379,20 +384,4 @@ class TiledLevel extends TiledMap
 		}
 	}
 	
-	public function collideWithLevel(obj:FlxObject, ?notifyCallback:FlxObject->FlxObject->Void, ?processCallback:FlxObject->FlxObject->Bool):Bool
-	{
-		if (collidableTileLayers == null)
-			return false;
-
-		for (map in collidableTileLayers)
-		{
-			// IMPORTANT: Always collide the map with objects, not the other way around. 
-			//			  This prevents odd collision errors (collision separation code off by 1 px).
-			if (FlxG.overlap(map, obj, notifyCallback, processCallback != null ? processCallback : FlxObject.separate))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
 }

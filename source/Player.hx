@@ -15,7 +15,7 @@ class Player extends Character
   
   public function new(?X:Float=0, ?Y:Float=0)
   {
-      super(200, X, Y, AssetPaths.male_hero_knight__png);
+      super(200, X, Y, AssetPaths.female_hero_knight__png);
   }
   
   override public function update(elapsed:Float):Void
@@ -51,12 +51,7 @@ class Player extends Character
     if (_left && _right)
       _left = _right = false;
 
-    return {
-      up: _up,
-      down: _down,
-      left: _left,
-      right: _right
-    }
+    return MoveInput.newDirection(_up, _down, _left, _right);
   }
 
   private function movement(elapsed: Float):Void

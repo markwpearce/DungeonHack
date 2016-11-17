@@ -26,7 +26,7 @@ class PlayState extends FlxState
 {
 	private var _player:Player;
 
-	private var enemies: Array<Character>;
+	private var enemies: Array<Enemy>;
 	public var _level:TiledLevel;
 
 	private var entities:FlxGroup;
@@ -52,8 +52,17 @@ class PlayState extends FlxState
 		addCollisionMeshesToSpace();
 		_player = new Player(200,200);
 
-		enemies = new Array<Character>();
-		enemies.push(new Enemy(250, 250, AssetPaths.orc_archer_0__png));
+		enemies = new Array<Enemy>();
+		for (i in 0...10) {
+			var asset = i%2==0 ? AssetPaths.orc_archer_0__png : AssetPaths.orc_regular_0__png;
+			enemies.push(new Enemy(Math.random()*800+100, Math.random()*300+100, asset));
+		
+		}
+		for(enemy in enemies) {
+			enemy.setNavigtaionTileMap(_level.navigationMap);
+			enemy.target = _player;
+		}
+		
 		_level.objectsLayer.add(_player);
 
 		for(enemy in enemies) {

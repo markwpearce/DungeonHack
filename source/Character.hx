@@ -3,29 +3,28 @@ package;
 import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeSpace;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.util.FlxColor;
 import flixel.FlxG;
-import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.math.FlxPoint;
+import flixel.tile.FlxTilemap;
+import flixel.tile.FlxBaseTilemap;
+import nape.geom.Ray;
+import nape.geom.RayResult;
+import nape.geom.Vec2;
 
-typedef MoveInput = {
-  var up : Bool;
-  var down: Bool;
-  var left: Bool;
-  var right: Bool;
-}
 
 class Character extends FlxNapeSprite
 {
-  static var NoMovement:MoveInput = {up: false, down: false, left: true, right: false};
-  
-  
   public var maxSpeed:Float = 200;
-  public var pointing:MoveInput = {up: false, down: false, left: true, right: false};
+  public var pointing:MoveInput;
+
+  private var navigationTileMap: FlxTilemap =null;
+  private var distanceToTargetThreshold: Float = 50;
+
 
   public function new(maxSpeedVal:Float=200, X:Float=0, Y:Float=0, ?characterSpriteSheet:FlxGraphicAsset, spriteWidth:Int=128, spriteHeight:Int=128)
   {
       super(X, Y, null, false, true);
+      pointing = new MoveInput();
       loadGraphic(characterSpriteSheet, true, spriteWidth, spriteHeight);
       origin.set(spriteWidth/2,spriteHeight*0.75);
       createCircularBody(10);
@@ -61,6 +60,51 @@ class Character extends FlxNapeSprite
     }
   }
 
+  public function getBodyPosition(?vec:Vec2): FlxPoint 
+  {
+    if(vec != null) {
+      return  new FlxPoint(vec.x, vec.y);
+    }
+    return new FlxPoint(body.position.x, body.position.y);
+  }
+
+  public function setNavigtaionTileMap(map: FlxTilemap) {
+    navigationTileMap = map;
+  }
+
+  public function findPathTo(destination:FlxPoint): Array<FlxPoint>
+  {
+    if(navigationTileMap == null) {
+      trace("no nav map!");
+      return null;
+    }
+    var position = body.position;
+    
+    var vecToTarget:Vec2  = new Vec2(destination.x, destination.y).sub(position); 
+    var rayToTarget = new Ray(position, vecToTarget);
+
+    // perform a ray cast using our nape's space instance
+    // to determine line of site
+    var rayResult:RayResult = FlxNapeSpace.space.rayCast(rayToTarget);
+
+    if (rayResult != null)
+    {
+      var distanceDelta = Math.abs(rayResult.distance - vecToTarget.length);
+
+      if(rayResult.distance < distanceToTargetThreshold){
+      //  trace("too close!");
+        return null;
+      }
+      else if(distanceDelta< 20 ) {
+        var points = new Array<FlxPoint>();
+        points.push(destination);
+        return points;
+      }
+    }
+    //trace("No line of site to Target");
+    return null;//navigationTileMap.findPath(new FlxPoint(position.x, position.y), destination, false, false, FlxTilemapDiagonalPolicy.NORMAL);
+  }
+
   public function playAnimation(name:String)
   {
     var direction = "";
@@ -81,40 +125,6 @@ class Character extends FlxNapeSprite
     if(animation.getByName(animationName) != null) {
       animation.play(animationName);
     }
-    
-      
-  }
-  
-  public function getMovementAngle(input:MoveInput, inRad:Bool = true): Float 
-  {
-    var mA:Float = 0;
-    var angleChange = 60; //isometric. true topdown -> 45
-    if (input.up)
-    {
-        mA = -90;
-        if (input.left)
-            mA -= angleChange;
-        else if (input.right)
-            mA += angleChange;
-    }
-    else if (input.down)
-    {
-        mA = 90;
-        if (input.left)
-            mA += angleChange;
-        else if (input.right)
-            mA -= angleChange;
-    }
-    else if (input.left)
-        mA = 180;
-    else if (input.right)
-        mA = 0;
-    
-    if(inRad) {
-      mA =  mA * (Math.PI/180);
-    }
-
-    return mA;
   }
 
   public function getNormalizedSpeed(elapsed: Float, speedPercentage:Float=1.0): Float {
@@ -122,11 +132,11 @@ class Character extends FlxNapeSprite
   }
 
   public function characterMove(elapsed: Float, ?direction:MoveInput, speedPercentage: Float = 1.0) {
-    if(direction != null && (direction.up || direction.down || direction.right || direction.left))
+    if(direction != null && (!direction.isEmpty()))
     {
       pointing = direction;
-      
-      var angleRad = getMovementAngle(direction);
+      direction.setDirectionAndAngle(this);
+      var angleRad = direction.angle;
      
       body.velocity.set(new nape.geom.Vec2(getNormalizedSpeed(elapsed, speedPercentage), 0));
       body.velocity.rotate(angleRad);
