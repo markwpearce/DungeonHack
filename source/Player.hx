@@ -15,7 +15,7 @@ class Player extends Character
   
   public function new(?X:Float=0, ?Y:Float=0)
   {
-      super(CharacterType.PLAYER, 200, X, Y, AssetPaths.female_hero_knight__png);
+      super(CharacterType.PLAYER, 50, 200, X, Y, AssetPaths.female_hero_knight__png);
       for(shape in body.shapes) {
         shape.userData.player = true;
       }

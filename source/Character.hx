@@ -56,7 +56,11 @@ class Character extends FlxNapeSprite
   
   public var type: CharacterType;
 
-  public function new(cType:CharacterType, maxSpeedVal:Float=200, X:Float=0, Y:Float=0, ?characterSpriteSheet:FlxGraphicAsset, spriteWidth:Int=128, spriteHeight:Int=128)
+  public var maxHealth:Int = 20;
+
+  private var wasAliveLastFrame:Bool = true;
+
+  public function new(cType:CharacterType, maxHealthVal:Int=20, maxSpeedVal:Float=200, X:Float=0, Y:Float=0, ?characterSpriteSheet:FlxGraphicAsset, spriteWidth:Int=128, spriteHeight:Int=128)
   {
       super(X, Y, null, false, true);
       type = cType;
@@ -65,6 +69,8 @@ class Character extends FlxNapeSprite
       origin.set(spriteWidth/2,spriteHeight*0.75);
       setUpPhysics();
 
+      maxHealth = maxHealthVal;
+      health = maxHealth;
 
       
       for(shape in body.shapes) {
@@ -78,8 +84,28 @@ class Character extends FlxNapeSprite
       addAnimation("idle", 0, 4, true);
       addAnimation("move", 4, 8);
       addAnimation("melee", 12, 4);
+      addAnimation("hit", 18, 2);
+      addAnimation("die",18, 6);
   }
 
+
+  override public function hurt(damage: Float):Void {
+    health -= damage;
+    health = Math.round(health);
+    health = Math.max(0, health);
+    if(health == 0) {
+      alive = false;
+    }
+    waitForAnimationToFinish= true;
+    playAnimation("hit");
+  }
+
+  public function heal(bonus: Float):Void {
+    if(!alive) return;
+    health += bonus;
+    health = Math.round(health);
+    health = Math.min(maxHealth, health);
+  }
   
 
 
@@ -132,8 +158,18 @@ class Character extends FlxNapeSprite
   
   override public function update(elapsed:Float):Void
   {
+     if(!alive) {
+       body.velocity.set(new nape.geom.Vec2(0, 0));
+     }
+     
+     if(wasAliveLastFrame && !alive) {
+       playAnimation("die");
+       physicsEnabled  =false;
+     }
+     
      applyCooldown(elapsed);
      super.update(elapsed);
+     wasAliveLastFrame = alive;
   }
 
   public function addAnimation(name:String, start:Int, numberOfFrames:Int, pingPong: Bool = false)
@@ -226,6 +262,10 @@ class Character extends FlxNapeSprite
   }
 
   public function characterMove(elapsed: Float, ?direction:MoveInput, speedPercentage: Float = 1.0) {
+    if(!alive) {
+      return;
+    }
+    
     if(waitForAnimationToFinish) {
       if(animation.finished) {
         waitForAnimationToFinish = false;
@@ -268,6 +308,10 @@ class Character extends FlxNapeSprite
 
 
   public function characterMelee():Bool {
+    if(!alive || waitForAnimationToFinish) {
+      return false;
+    }   
+    
     var meleed = checkIfCool("melee", meleeStats.cooldown, true);
     
     if(!meleed) {
@@ -306,6 +350,7 @@ class Character extends FlxNapeSprite
         }
         else {
           trace(name + (damageRoll.critical ? " *HIT* ": " hit ")+entity.name+" for "+damageRoll.damage);
+          entity.hurt(damageRoll.damage);
         }
               
     }

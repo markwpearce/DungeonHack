@@ -14,7 +14,7 @@ class Enemy extends Character
  
   public function new(?X:Float=0, ?Y:Float=0,?characterSpriteSheet:FlxGraphicAsset)
   {
-      super(CharacterType.ENEMY, 100, X, Y, characterSpriteSheet);
+      super(CharacterType.ENEMY, 20, 100, X, Y, characterSpriteSheet);
 
       for(shape in body.shapes) {
         shape.userData.enemy = true;
