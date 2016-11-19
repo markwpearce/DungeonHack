@@ -10,6 +10,7 @@ import flixel.tile.FlxBaseTilemap;
 import nape.geom.Ray;
 import nape.geom.RayResult;
 import nape.geom.Vec2;
+import nape.shape.ShapeList;
 
 
 typedef WeaponStats = {
@@ -20,6 +21,18 @@ typedef WeaponStats = {
   missChance: Float, //chance of no damage
 };
 
+
+enum CharacterType {
+  ENEMY;
+  PLAYER;
+  NPC;
+}
+
+typedef RollResult = {
+  damage: Int,
+  miss: Bool,
+  critical: Bool
+}
 
 
 class Character extends FlxNapeSprite
@@ -38,19 +51,27 @@ class Character extends FlxNapeSprite
   private var waitForAnimationToFinish:Bool = false;
 
   private var meleeStats: WeaponStats;
-  
 
-  public function new(maxSpeedVal:Float=200, X:Float=0, Y:Float=0, ?characterSpriteSheet:FlxGraphicAsset, spriteWidth:Int=128, spriteHeight:Int=128)
+  public var name:String;
+  
+  public var type: CharacterType;
+
+  public function new(cType:CharacterType, maxSpeedVal:Float=200, X:Float=0, Y:Float=0, ?characterSpriteSheet:FlxGraphicAsset, spriteWidth:Int=128, spriteHeight:Int=128)
   {
       super(X, Y, null, false, true);
+      type = cType;
       pointing = new MoveInput();
       loadGraphic(characterSpriteSheet, true, spriteWidth, spriteHeight);
       origin.set(spriteWidth/2,spriteHeight*0.75);
-      createCircularBody(10);
-      setBodyMaterial(0,1, 0.8, 1, 0.01);
-      body.space = FlxNapeSpace.space;
-      body.allowMovement = true;
-      body.allowRotation = false;
+      setUpPhysics();
+
+
+      
+      for(shape in body.shapes) {
+        shape.userData.transparent = true; // characters can see through other charcters
+        shape.userData.character = this;
+      }
+
       cooldowns = ["melee" => 0];
       setMelee();
       maxSpeed = maxSpeedVal;
@@ -58,6 +79,17 @@ class Character extends FlxNapeSprite
       addAnimation("move", 4, 8);
       addAnimation("melee", 12, 4);
   }
+
+  
+
+
+  public function setUpPhysics() {
+      createCircularBody(10);
+      setBodyMaterial(0,1, 0.8, 1, 0.01);
+      body.space = FlxNapeSpace.space;
+      body.allowMovement = true;
+      body.allowRotation = false;
+  } 
 
 
   private function applyCooldown(elapsed:Float): Void 
@@ -84,9 +116,9 @@ class Character extends FlxNapeSprite
       is between 0.25*maxDamage and maxDamage
       double if crit
   */
-  public function rollForDamage(stats: WeaponStats):Int {
+  public function rollForDamage(stats: WeaponStats):RollResult {
     if(Math.random() < stats.missChance) {
-      return 0;
+      return {damage: 0, critical: false, miss: true};
     }
     var crit = (Math.random() < stats.critChance);
     var damage = Math.random()*(stats.maxDamage);
@@ -95,7 +127,7 @@ class Character extends FlxNapeSprite
       damage = Math.max(damage, stats.maxDamage/2);
       damage *= 2;
     }
-    return Math.round(damage);
+    return {damage: Math.round(damage), critical: crit, miss: false};
   }
   
   override public function update(elapsed:Float):Void
@@ -153,10 +185,11 @@ class Character extends FlxNapeSprite
       var distanceDelta = Math.abs(rayResult.distance - vecToTarget.length);
 
       if(rayResult.distance < distanceToTargetThreshold){
-      //  trace("too close!");
+        //  we're already close enough
         return null;
       }
-      else if(distanceDelta< 20 ) {
+      else if(distanceDelta< distanceToTargetThreshold ) {
+        //this gets me within the threshold
         var points = new Array<FlxPoint>();
         points.push(destination);
         return points;
@@ -209,6 +242,7 @@ class Character extends FlxNapeSprite
       speedPercentage = Math.max(0, Math.min(direction.magnitude, speedPercentage));
       body.velocity.set(new nape.geom.Vec2(getNormalizedSpeed(elapsed, speedPercentage), 0));
       body.velocity.rotate(angleRad);
+      pointing.angle = angleRad;
       playAnimation("move");
     } 
     else {
@@ -236,10 +270,44 @@ class Character extends FlxNapeSprite
   public function characterMelee():Bool {
     var meleed = checkIfCool("melee", meleeStats.cooldown, true);
     
-    if(meleed) {
-      //check forward direction quarter circle for enemies
-      //roll for damage on each
-      
+    if(!meleed) {
+      return false;
+    }
+
+    //check forward direction for enemies
+    var forwardVector = new Vec2(1, 0);
+
+    var middleOfHitZone = body.position.add(forwardVector.rotate(pointing.angle).mul(meleeStats.distance/2));
+    var shapes:ShapeList = FlxNapeSpace.space.shapesInCircle(middleOfHitZone, meleeStats.distance/2);
+    
+    
+    var hitCharacters = new Array<Character>();
+    for(shape in shapes) {
+      var entity:Character  = shape.userData.character;
+        
+      if(entity != null && type == CharacterType.PLAYER && shape.userData.enemy) {
+        if(hitCharacters.indexOf(entity) == -1) {
+          hitCharacters.push(entity);
+        }
+      }
+      else if(entity != null && type == CharacterType.ENEMY && shape.userData.player) {
+        if(hitCharacters.indexOf(entity) == -1) {
+          hitCharacters.push(entity);
+        }
+      }
+    }
+    
+    trace("Hits: "+hitCharacters.length);
+    for(entity in hitCharacters) {
+        //roll for damage on each
+        var damageRoll = rollForDamage(meleeStats);
+        if(damageRoll.miss) {
+          trace(name + " missed  "+entity.name);
+        }
+        else {
+          trace(name + (damageRoll.critical ? " *HIT* ": " hit ")+entity.name+" for "+damageRoll.damage);
+        }
+              
     }
     return meleed;
 

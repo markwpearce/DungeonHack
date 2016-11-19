@@ -25,6 +25,8 @@ class MoveInput
     target = tar;
     xAxis = x;
     yAxis = y;
+    angle = 0;
+    magnitude = 1.0;
   }
 
   public static function newDirection(u:Bool=false, d:Bool=false, l:Bool=false, r:Bool=false) : MoveInput {

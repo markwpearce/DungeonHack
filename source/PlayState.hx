@@ -55,20 +55,16 @@ class PlayState extends FlxState
 		enemies = new Array<Enemy>();
 		for (i in 0...10) {
 			var asset = i%2==0 ? AssetPaths.orc_archer_0__png : AssetPaths.orc_regular_0__png;
-			enemies.push(new Enemy(Math.random()*800+100, Math.random()*300+100, asset));
-		
-		}
-		for(enemy in enemies) {
+			var enemy = new Enemy(Math.random()*800+100, Math.random()*300+100, asset);
 			enemy.setNavigtaionTileMap(_level.navigationMap);
 			enemy.target = _player;
-		}
-		
-		_level.objectsLayer.add(_player);
-
-		for(enemy in enemies) {
+			enemy.name = "Enemy "+i;
 			_level.objectsLayer.add(enemy);
-
+			enemies.push(enemy);
+			
 		}
+	
+		_level.objectsLayer.add(_player);
 
 		// Add backgrounds
 		add(_level.backgroundLayer);
