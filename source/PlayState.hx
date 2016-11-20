@@ -33,6 +33,8 @@ class PlayState extends FlxState
 
 	private var  levelCollisionSprite:FlxNapeSprite;
 
+	public var deadObjectsLayer: FlxTypedGroup<FlxSprite>;
+
 	override public function create():Void
 	{
 		entities = new FlxGroup();
@@ -42,12 +44,12 @@ class PlayState extends FlxState
 		FlxG.camera.zoom = 1.5;
 	
 	
-	
+		
 		FlxNapeSpace.init();
 		FlxNapeSpace.space.gravity = new Vec2(0, 0);
 		levelCollisionSprite = new FlxNapeSprite(0, 0, null, false, true);
 		
-		
+		deadObjectsLayer = new FlxTypedGroup<FlxSprite>();
 		_level = new TiledLevel("assets/tiled/test_map3.tmx", this);
 		addCollisionMeshesToSpace();
 		_player = new Player(200,200);
@@ -71,6 +73,7 @@ class PlayState extends FlxState
 		
 		// Add static images
 	//	add(_level.imagesLayer);
+		add(deadObjectsLayer);
 		add(_level.objectsLayer);
 	// Add foreground tiles after adding level objects, so these tiles render on top of player
 
@@ -99,7 +102,22 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+		var deadSprites = new Array<FlxSprite>();
 
+		for(sprite in _level.objectsLayer) {
+			if(!sprite.alive) {
+				deadObjectsLayer.add(sprite);
+				deadSprites.push(sprite);
+			}
+		}
+
+		//Then I'm removing scheduled objects from FlxGroup
+		if (deadSprites.length > 0) {
+			for (sprite in deadSprites) {
+				_level.objectsLayer.remove(sprite, true);
+			}
+		}
+		
 		_level.objectsLayer.sort(sortByY);
 
 	}

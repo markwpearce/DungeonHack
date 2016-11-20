@@ -62,31 +62,45 @@ class Character extends FlxNapeSprite
 
   public function new(cType:CharacterType, maxHealthVal:Int=20, maxSpeedVal:Float=200, X:Float=0, Y:Float=0, ?characterSpriteSheet:FlxGraphicAsset, spriteWidth:Int=128, spriteHeight:Int=128)
   {
-      super(X, Y, null, false, true);
-      type = cType;
-      pointing = new MoveInput();
-      loadGraphic(characterSpriteSheet, true, spriteWidth, spriteHeight);
-      origin.set(spriteWidth/2,spriteHeight*0.75);
-      setUpPhysics();
+    super(X, Y, null, false, true);
+    type = cType;
+    pointing = new MoveInput();
+    loadGraphic(characterSpriteSheet, true, spriteWidth, spriteHeight);
+    origin.set(spriteWidth/2,spriteHeight*0.75);
+    setUpPhysics();
 
-      maxHealth = maxHealthVal;
-      health = maxHealth;
+    maxHealth = maxHealthVal;
+    health = maxHealth;
 
-      
-      for(shape in body.shapes) {
-        shape.userData.transparent = true; // characters can see through other charcters
-        shape.userData.character = this;
-      }
+    
+    for(shape in body.shapes) {
+      shape.userData.transparent = true; // characters can see through other charcters
+      shape.userData.character = this;
+    }
 
-      cooldowns = ["melee" => 0];
-      setMelee();
-      maxSpeed = maxSpeedVal;
-      addAnimation("idle", 0, 4, true);
-      addAnimation("move", 4, 8);
-      addAnimation("melee", 12, 4);
-      addAnimation("hit", 18, 2);
-      addAnimation("die",18, 6);
+    cooldowns = ["melee" => 0];
+    setMelee();
+    maxSpeed = maxSpeedVal;
+
+    setUpAnimations();
   }
+
+  public function setUpPhysics() {
+    createCircularBody(10);
+    setBodyMaterial(0,1, 0.8, 1, 0.01);
+    body.space = FlxNapeSpace.space;
+    body.allowMovement = true;
+    body.allowRotation = false;
+  } 
+
+  public function setUpAnimations() {
+    addAnimation("idle", 0, 4, true);
+    addAnimation("move", 4, 8);
+    addAnimation("melee", 12, 4);
+    addAnimation("hit", 18, 2);
+    addAnimation("die",18, 6);
+  }
+  
 
 
   override public function hurt(damage: Float):Void {
@@ -109,13 +123,7 @@ class Character extends FlxNapeSprite
   
 
 
-  public function setUpPhysics() {
-      createCircularBody(10);
-      setBodyMaterial(0,1, 0.8, 1, 0.01);
-      body.space = FlxNapeSpace.space;
-      body.allowMovement = true;
-      body.allowRotation = false;
-  } 
+  
 
 
   private function applyCooldown(elapsed:Float): Void 
