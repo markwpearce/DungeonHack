@@ -28,6 +28,12 @@ enum CharacterType {
   NPC;
 }
 
+enum LineOfSiteResult {
+  NO_LOS;
+  SEES;
+  CLOSE;
+}
+
 typedef RollResult = {
   damage: Int,
   miss: Bool,
@@ -42,7 +48,7 @@ class Character extends FlxNapeSprite
   public var pointing:MoveInput;
 
   private var navigationTileMap: FlxTilemap =null;
-  private var distanceToTargetThreshold: Float = 50;
+  static private var distanceToTargetThreshold: Float = 50;
 
 
   private var cooldowns: Map<String, Float>;
@@ -209,36 +215,64 @@ class Character extends FlxNapeSprite
     navigationTileMap = map;
   }
 
-  public function findPathTo(destination:FlxPoint): Array<FlxPoint>
-  {
-    if(navigationTileMap == null) {
-      trace("no nav map!");
-      return null;
+  public function seesTargetSprite(target: FlxNapeSprite, thresholdDistance: Float = -1): LineOfSiteResult {
+    return seesTarget(getBodyPosition(target.body.position), thresholdDistance);
+  }
+   
+
+  public function seesTarget(currentTargetPostion: FlxPoint, thresholdDistance: Float = -1): LineOfSiteResult {
+    if(thresholdDistance < 0) {
+      thresholdDistance = distanceToTargetThreshold;
     }
     var position = body.position;
     
-    var vecToTarget:Vec2  = new Vec2(destination.x, destination.y).sub(position); 
+    var vecToTarget:Vec2  = new Vec2(currentTargetPostion.x, currentTargetPostion.y).sub(position); 
     var rayToTarget = new Ray(position, vecToTarget);
 
-    // perform a ray cast using our nape's space instance
-    // to determine line of site
     var rayResult:RayResult = FlxNapeSpace.space.rayCast(rayToTarget);
 
     if (rayResult != null)
     {
       var distanceDelta = Math.abs(rayResult.distance - vecToTarget.length);
 
-      if(rayResult.distance < distanceToTargetThreshold){
+      if(rayResult.distance < thresholdDistance &&
+        rayResult.shape.body.position.x == currentTargetPostion.x &&
+        rayResult.shape.body.position.y == currentTargetPostion.y) {
         //  we're already close enough
-        return null;
+        return LineOfSiteResult.CLOSE;
       }
-      else if(distanceDelta< distanceToTargetThreshold ) {
+      else if(distanceDelta< thresholdDistance ) {
+        return LineOfSiteResult.SEES;
+      }
+    }
+    return LineOfSiteResult.NO_LOS;
+
+  }
+
+  public function findPathToSprite(target:FlxNapeSprite): Array<FlxPoint> {
+    return findPathTo(getBodyPosition(target.body.position));
+  }
+  
+
+  public function findPathTo(destination:FlxPoint): Array<FlxPoint>
+  {
+    if(navigationTileMap == null) {
+      trace("no nav map!");
+      return null;
+    }
+   
+    var losResult = seesTarget(destination);
+   
+    switch(losResult) {
+      case LineOfSiteResult.SEES: {
         //this gets me within the threshold
         var points = new Array<FlxPoint>();
         points.push(destination);
         return points;
       }
-    }
+      default: {
+      }
+     }
     //trace("No line of site to Target");
     return null;//navigationTileMap.findPath(new FlxPoint(position.x, position.y), destination, false, false, FlxTilemapDiagonalPolicy.NORMAL);
   }
