@@ -234,7 +234,6 @@ class Character extends FlxNapeSprite
     if (rayResult != null)
     {
       var distanceDelta = Math.abs(rayResult.distance - vecToTarget.length);
-
       if(rayResult.distance < thresholdDistance &&
         rayResult.shape.body.position.x == currentTargetPostion.x &&
         rayResult.shape.body.position.y == currentTargetPostion.y) {
@@ -249,19 +248,19 @@ class Character extends FlxNapeSprite
 
   }
 
-  public function findPathToSprite(target:FlxNapeSprite): Array<FlxPoint> {
-    return findPathTo(getBodyPosition(target.body.position));
+  public function findPathToSprite(target:FlxNapeSprite, thresholdDistance: Float = -1): Array<FlxPoint> {
+    return findPathTo(getBodyPosition(target.body.position), thresholdDistance);
   }
   
 
-  public function findPathTo(destination:FlxPoint): Array<FlxPoint>
+  public function findPathTo(destination:FlxPoint,thresholdDistance: Float = -1): Array<FlxPoint>
   {
     if(navigationTileMap == null) {
       trace("no nav map!");
       return null;
     }
    
-    var losResult = seesTarget(destination);
+    var losResult = seesTarget(destination,thresholdDistance);
    
     switch(losResult) {
       case LineOfSiteResult.SEES: {
@@ -270,11 +269,17 @@ class Character extends FlxNapeSprite
         points.push(destination);
         return points;
       }
+      case LineOfSiteResult.CLOSE: {
+        //already within the threshold
+        return null;
+      }
       default: {
       }
-     }
-    //trace("No line of site to Target");
-    return null;//navigationTileMap.findPath(new FlxPoint(position.x, position.y), destination, false, false, FlxTilemapDiagonalPolicy.NORMAL);
+    }
+    var position = getBodyPosition();
+    var path =  navigationTileMap.findPath(new FlxPoint(position.x, position.y), destination, false, false, FlxTilemapDiagonalPolicy.NORMAL);
+    return path;
+    
   }
 
   public function playAnimation(name:String)
