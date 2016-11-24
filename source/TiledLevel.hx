@@ -5,6 +5,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.addons.editors.tiled.TiledImageLayer;
 import flixel.addons.editors.tiled.TiledImageTile;
+import flixel.addons.editors.tiled.TiledLayer;
 import flixel.addons.editors.tiled.TiledLayer.TiledLayerType;
 import flixel.addons.editors.tiled.TiledMap;
 import flixel.addons.editors.tiled.TiledObject;
@@ -45,7 +46,7 @@ class TiledLevel extends TiledMap
 	// Sprites of images layers
 	public var imagesLayer:FlxGroup;
 	
-	public function new(tiledLevel:Dynamic, state:PlayState)
+	public function new(tiledLevel:Dynamic)
 	{
 		super(tiledLevel);
 		
@@ -59,36 +60,18 @@ class TiledLevel extends TiledMap
 
 
 		loadImages();
-		loadObjects(state);
+		loadObjects();
 		
 		// Load Tile Maps
 		for (layer in layers)
 		{
-			//if(layer.name == "Navigation") continue;
 			
 			if (layer.type != TiledLayerType.TILE) continue;
 			var tileLayer:TiledTileLayer = cast layer;
 			
-			var tileSheetName:String = tileLayer.properties.get("tileset");
+			var tileSet = getTileSetFromLayer(tileLayer);
+			var processedPath = getImagePathFromTileSet(tileSet);
 			
-			if (tileSheetName == null)
-				throw "'tileset' property not defined for the '" + tileLayer.name + "' layer. Please add the property to the layer.";
-				
-			var tileSet:TiledTileSet = null;
-			for (ts in tilesets)
-			{
-				if (ts.name == tileSheetName)
-				{
-					tileSet = ts;
-					break;
-				}
-			}
-			
-			if (tileSet == null)
-				throw "Tileset '" + tileSheetName + " not found. Did you misspell the 'tilesheet' property in " + tileLayer.name + "' layer?";
-				
-			var imagePath 		= new Path(tileSet.imageSource);
-			var processedPath 	= c_PATH_LEVEL_TILESHEETS + imagePath.file + "." + imagePath.ext;
 			
 			// could be a regular FlxTilemap if there are no animated tiles
 			var tilemap = new FlxTilemap();
@@ -145,6 +128,38 @@ class TiledLevel extends TiledMap
 		}
 	}
 
+
+
+	private function getTileSetFromLayer(tileLayer: TiledLayer): TiledTileSet
+	{
+		var tileSheetName:String = tileLayer.properties.get("tileset");
+			
+		if (tileSheetName == null)
+				throw "'tileset' property not defined for the '" + tileLayer.name + "' layer. Please add the property to the layer.";
+				
+		var tileSet:TiledTileSet = null;
+		for (ts in tilesets)
+		{
+			if (ts.name == tileSheetName)
+			{
+				tileSet = ts;
+				break;
+			}
+		}
+		
+		if (tileSet == null)
+			throw "Tileset '" + tileSheetName + " not found. Did you misspell the 'tilesheet' property in " + tileLayer.name + "' layer?";
+			
+		return tileSet;
+	}
+
+	private function getImagePathFromTileSet(tileSet:TiledTileSet): String
+	{
+		var imagePath 		= new Path(tileSet.imageSource);
+		var processedPath 	= c_PATH_LEVEL_TILESHEETS + imagePath.file + "." + imagePath.ext;
+		return processedPath;
+	}
+
 	private function getAnimatedTile(props:TiledTilePropertySet, tileset:TiledTileSet):FlxTileSpecial
 	{
 		var special = new FlxTileSpecial(1, false, false, 0);
@@ -157,7 +172,7 @@ class TiledLevel extends TiledMap
 		return special;
 	}
 	
-	public function loadObjects(state:PlayState)
+	public function loadObjects()
 	{
 		var layer:TiledObjectLayer;
 		for (layer in layers)
@@ -166,15 +181,6 @@ class TiledLevel extends TiledMap
 				continue;
 			var objectLayer:TiledObjectLayer = cast layer;
 
-			//collection of images layer
-			/*if (layer.name == "images")
-			{
-				for (o in objectLayer.objects)
-				{
-					loadImageObject(o);
-				}
-			}*/
-			
 			//objects layer
 			if (layer.type  == TiledLayerType.OBJECT)
 			{
@@ -187,7 +193,7 @@ class TiledLevel extends TiledMap
 					}
 					else if(o.objectType == TiledObject.TILE) {
 					  //load it as a tile based scenery
-						loadObject(state, o, objectLayer, objectsLayer);	
+						loadObject(o, objectLayer, objectsLayer);	
 					}
 				}
 			}
@@ -276,7 +282,7 @@ class TiledLevel extends TiledMap
 		backgroundLayer.add(decoSprite);
 	}
 	
-	private function loadObject(state:PlayState, object:TiledObject, g:TiledObjectLayer, group:FlxTypedGroup<FlxSprite>)
+	private function loadObject(object:TiledObject, g:TiledObjectLayer, group:FlxTypedGroup<FlxSprite>)
 	{
 		/*var x:Int = o.x;
 		var y:Int = o.y;
@@ -292,18 +298,16 @@ class TiledLevel extends TiledMap
 		//var tilesImageCollection:TiledTileSet = this.getTileSet("grassland_tiles2");
 
 		//tilesImageCollection.
-		
-		
-		var tileset:TiledTileSet = 	g.map.getTileSet("grassland_tiles2");
+		var tileset:TiledTileSet = getTileSetFromLayer(g);
 		var tileIndex = object.gid-tileset.firstGID;
 		
 		//trace(tileIndex+" of "+tileset.tileWidth+" x "+tileset.tileHeight);
 	
 		
 		//decorative sprites
-		var levelsDir:String = "assets/tiled/";
-				var imagePath 		= new Path(tileset.imageSource);
-			var processedPath 	= c_PATH_LEVEL_TILESHEETS + imagePath.file + "." + imagePath.ext;
+	//	var levelsDir:String = "assets/tiled/";
+		//		var imagePath 		= new Path(tileset.imageSource);
+			var processedPath 	= getImagePathFromTileSet(tileset);// c_PATH_LEVEL_TILESHEETS + imagePath.file + "." + imagePath.ext;
 	
 
 		var decoSprite:FlxSprite = new FlxSprite(0, 0);//, processedPath);//levelsDir + tileImagesSource.source);

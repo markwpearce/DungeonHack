@@ -50,7 +50,7 @@ class PlayState extends FlxState
 		levelCollisionSprite = new FlxNapeSprite(0, 0, null, false, true);
 		
 		deadObjectsLayer = new FlxTypedGroup<FlxSprite>();
-		_level = new TiledLevel("assets/tiled/test_map3.tmx", this);
+		_level = new TiledLevel("assets/tiled/test_map3.tmx");
 		addCollisionMeshesToSpace();
 		_player = new Player(200,200);
 
