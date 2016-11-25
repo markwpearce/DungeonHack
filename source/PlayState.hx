@@ -117,17 +117,17 @@ class PlayState extends FlxState
 			}
 
 			case 2:{
-				enemy = enemies.length % 1 == 0 ?
+				enemy = enemies.length % 2 == 0 ?
 					new OrcHeavy(start.x, start.y) : new Orc(start.x, start.y);
 			}
 
 			case 3:{
-				enemy = enemies.length % 1 == 0 ?
+				enemy = enemies.length % 2 == 0 ?
 					new OrcHeavy(start.x, start.y) : new OrcElite(start.x, start.y);
 			}
 
 			case 4:{
-				enemy = enemies.length % 1 == 0 ?
+				enemy = enemies.length % 2 == 0 ?
 					new OrcElite(start.x, start.y) : new Skeleton(start.x, start.y);
 			}
 
@@ -219,7 +219,7 @@ class PlayState extends FlxState
 				_level.objectsLayer.remove(sprite, true);
 			}
 		}
-		if(gameLength > 10) {
+		if(gameLength > 8) {
 			addEnemy();
 			gameLength = 0;
 		}

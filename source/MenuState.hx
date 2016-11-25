@@ -12,15 +12,19 @@ class MenuState extends FlxState
 {
 	private var _btnPlay:FlxButton;
 	private var _btnQuit:FlxButton;
+	private var bkgrnd: FlxSprite;
 
 	override public function create():Void
 	{
+		bkgrnd = new FlxSprite(0, 0, AssetPaths.TitleScreen__png);
+		bkgrnd.screenCenter();
 		_btnPlay = new FlxButton(0, 0, "Play", clickPlay);
 		_btnPlay.screenCenter();
  		_btnQuit = new FlxButton(0, 0, "Quit", clickQuit);
 		_btnQuit.screenCenter();
 		_btnQuit.y+=30;
- 		add(_btnPlay);
+ 		add(bkgrnd);
+		add(_btnPlay);
 		add(_btnQuit);
 		 	
 
