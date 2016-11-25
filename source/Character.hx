@@ -246,7 +246,7 @@ class Character extends FlxNapeSprite
     if (rayResult != null)
     {
       var distanceDelta = Math.abs(rayResult.distance - vecToTarget.length);
-      if(rayResult.distance < thresholdDistance &&
+      if(rayResult.distance <= thresholdDistance+5 &&
         rayResult.shape.body.position.x == currentTargetPostion.x &&
         rayResult.shape.body.position.y == currentTargetPostion.y) {
         //  we're already close enough

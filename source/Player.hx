@@ -124,7 +124,7 @@ class Player extends Character
     exp += moreExp;
     PopText.show(getBodyPosition(), "+"+moreExp, flixel.util.FlxColor.WHITE);
    
-    if(exp > nextLevel) {
+    if(exp >= nextLevel) {
       exp = exp % nextLevel;
       nextLevel = Math.round(nextLevel*1.2);
       maxHealth = Math.round(maxHealth*1.5);

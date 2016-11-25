@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="64" tilewidth="64" tileheight="32" nextobjectid="601">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="64" tilewidth="64" tileheight="32" nextobjectid="603">
  <tileset firstgid="1" name="32_flagstone_tiles" tilewidth="64" tileheight="32" tilecount="32" columns="4">
   <image source="flagstone_tiles.png" width="256" height="256"/>
   <tile id="0">
@@ -225,7 +225,7 @@
 0,0,0,20,21,29,12,30,23,28,16,4,32,13,2,9,28,12,25,0,0,0,0,0,0,18,17,4,25,29,17,10,
 0,0,0,17,27,31,11,1,3,9,12,30,27,2,5,7,30,18,0,0,0,0,0,0,19,14,27,11,25,12,32,14,
 0,0,22,5,32,2,8,22,22,30,15,16,4,28,26,6,19,1,0,0,0,0,0,3,14,17,7,18,16,13,23,10,
-0,0,1,5,7,28,32,21,16,29,17,7,26,5,26,20,17,4,27,5,0,0,2,14,7,10,10,12,26,8,18,29,
+0,0,0,5,7,28,32,21,16,29,17,7,26,5,26,20,17,4,27,5,0,0,2,14,7,10,10,12,26,8,18,29,
 0,0,1,5,15,24,31,24,5,4,28,2,32,13,28,9,18,5,30,15,0,25,9,5,17,21,11,12,30,3,25,5,
 0,12,23,25,19,10,28,15,9,28,17,32,16,4,19,23,24,13,32,21,28,13,11,12,31,16,2,7,4,16,30,28,
 0,9,14,26,22,9,17,26,25,29,13,6,30,2,31,14,4,20,19,14,18,14,17,1,32,9,23,2,17,14,21,10,
@@ -972,43 +972,43 @@
    </properties>
    <polygon points="0,0 64,40 144,0 64,-40"/>
   </object>
-  <object id="545" type="Collider" x="496" y="536" width="64" height="40">
+  <object id="545" type="Collider" x="496" y="520" width="64" height="56">
    <properties>
     <property name="collide" type="bool" value="true"/>
    </properties>
    <ellipse/>
   </object>
-  <object id="546" type="Collider" x="672" y="440" width="64" height="48">
+  <object id="546" type="Collider" x="672" y="432" width="64" height="56">
    <properties>
     <property name="collide" type="bool" value="true"/>
    </properties>
    <ellipse/>
   </object>
-  <object id="547" type="Collider" x="848" y="360" width="64" height="40">
+  <object id="547" type="Collider" x="848" y="344" width="64" height="56">
    <properties>
     <property name="collide" type="bool" value="true"/>
    </properties>
    <ellipse/>
   </object>
-  <object id="578" type="Collider" x="992" y="824" width="64" height="48">
+  <object id="578" type="Collider" x="992" y="816" width="64" height="56">
    <properties>
     <property name="collide" type="bool" value="true"/>
    </properties>
    <ellipse/>
   </object>
-  <object id="579" type="Collider" x="1136" y="736" width="64" height="48">
+  <object id="579" type="Collider" x="1136" y="728" width="64" height="56">
    <properties>
     <property name="collide" type="bool" value="true"/>
    </properties>
    <ellipse/>
   </object>
-  <object id="580" type="Collider" x="912" y="1288" width="64" height="48">
+  <object id="580" type="Collider" x="912" y="1280" width="64" height="56">
    <properties>
     <property name="collide" type="bool" value="true"/>
    </properties>
    <ellipse/>
   </object>
-  <object id="581" type="Collider" x="1168" y="1152" width="64" height="48">
+  <object id="581" type="Collider" x="1168" y="1136" width="64" height="64">
    <properties>
     <property name="collide" type="bool" value="true"/>
    </properties>
@@ -1047,6 +1047,18 @@
    <ellipse/>
   </object>
   <object id="587" x="224" y="656" width="112" height="104">
+   <properties>
+    <property name="spawn" value="enemy"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object id="601" x="976" y="1560" width="112" height="104">
+   <properties>
+    <property name="spawn" value="enemy"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object id="602" x="608" y="168" width="112" height="104">
    <properties>
     <property name="spawn" value="enemy"/>
    </properties>
