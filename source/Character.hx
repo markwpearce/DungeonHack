@@ -11,6 +11,8 @@ import nape.geom.Ray;
 import nape.geom.RayResult;
 import nape.geom.Vec2;
 import nape.shape.ShapeList;
+import PopText;
+import flixel.util.FlxColor;
 
 
 typedef WeaponStats = {
@@ -65,6 +67,10 @@ class Character extends FlxNapeSprite
   public var maxHealth:Int = 20;
 
   private var wasAliveLastFrame:Bool = true;
+  public var level= 1;
+
+  public var spriteTileSize = 128;
+  
 
   public function new(cType:CharacterType, maxHealthVal:Int=20, maxSpeedVal:Float=200, X:Float=0, Y:Float=0, ?characterSpriteSheet:FlxGraphicAsset, spriteWidth:Int=128, spriteHeight:Int=128)
   {
@@ -106,10 +112,17 @@ class Character extends FlxNapeSprite
     addAnimation("hit", 18, 2);
     addAnimation("die",18, 6);
   }
-  
 
+  public function onKilledSomething(entity: Character) {
+    //nothing
+  }
 
-  override public function hurt(damage: Float):Void {
+  public function onDied() {
+    playAnimation("die");
+    physicsEnabled  =false;
+  }
+
+  override public function hurt(damage: Float) {
     health -= damage;
     health = Math.round(health);
     health = Math.max(0, health);
@@ -162,7 +175,7 @@ class Character extends FlxNapeSprite
     }
     var crit = (Math.random() < stats.critChance);
     var damage = Math.random()*(stats.maxDamage);
-    damage = Math.max(damage, stats.maxDamage/4);
+    damage = Math.max(damage, stats.maxDamage/4)+level*1.5;
     if(crit) {
       damage = Math.max(damage, stats.maxDamage/2);
       damage *= 2;
@@ -177,8 +190,7 @@ class Character extends FlxNapeSprite
      }
      
      if(wasAliveLastFrame && !alive) {
-       playAnimation("die");
-       physicsEnabled  =false;
+       onDied();
      }
      
      applyCooldown(elapsed);
@@ -375,7 +387,6 @@ class Character extends FlxNapeSprite
     var hitCharacters = new Array<Character>();
     for(shape in shapes) {
       var entity:Character  = shape.userData.character;
-        
       if(entity != null && type == CharacterType.PLAYER && shape.userData.enemy) {
         if(hitCharacters.indexOf(entity) == -1) {
           hitCharacters.push(entity);
@@ -388,16 +399,20 @@ class Character extends FlxNapeSprite
       }
     }
     
-    trace("Hits: "+hitCharacters.length);
+    //trace("Hits: "+hitCharacters.length);
     for(entity in hitCharacters) {
         //roll for damage on each
         var damageRoll = rollForDamage(meleeStats);
         if(damageRoll.miss) {
-          trace(name + " missed  "+entity.name);
+          //trace(name + " missed  "+entity.name);
         }
         else {
-          trace(name + (damageRoll.critical ? " *HIT* ": " hit ")+entity.name+" for "+damageRoll.damage);
+          PopText.show(entity.getBodyPosition(), ""+damageRoll.damage, FlxColor.RED);
+          //trace(name + (damageRoll.critical ? " *HIT* ": " hit ")+entity.name+" for "+damageRoll.damage);
           entity.hurt(damageRoll.damage);
+          if(!entity.alive) {
+            onKilledSomething(entity);
+          }
         }
               
     }

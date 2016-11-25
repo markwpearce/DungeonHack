@@ -15,9 +15,9 @@ class Enemy extends Character
   private var ai:FSM;
  
  
-  public function new(?X:Float=0, ?Y:Float=0,?characterSpriteSheet:FlxGraphicAsset)
+  public function new(?X:Float=0, ?Y:Float=0,?characterSpriteSheet:FlxGraphicAsset, mHealth: Int =20, eSpeed: Int = 100)
   {
-      super(CharacterType.ENEMY, 20, 100, X, Y, characterSpriteSheet);
+      super(CharacterType.ENEMY, mHealth, eSpeed, X, Y, characterSpriteSheet);
       
       secondsSinceLastSawTarget = 1000;
       

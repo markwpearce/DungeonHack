@@ -40,6 +40,8 @@ class TiledLevel extends TiledMap
 	public var objectsLayer: FlxTypedGroup<FlxSprite>;
 	public var backgroundLayer:FlxGroup;
 	public var collisionMeshes:Array<Shape>;
+	public var playerSpawns:Array<Shape>;
+	public var spawnMeshes:Array<Shape>;
 	public var navigationMap:FlxTilemap;
 
 	
@@ -55,6 +57,8 @@ class TiledLevel extends TiledMap
 		objectsLayer = new FlxTypedGroup<FlxSprite>();
 		backgroundLayer = new FlxGroup();
 		collisionMeshes = new Array<Shape>();
+		spawnMeshes = new Array<Shape>();
+		playerSpawns = new Array<Shape>();
 
 		FlxG.camera.setScrollBoundsRect(0, 0, fullWidth, fullHeight, true);
 
@@ -72,7 +76,6 @@ class TiledLevel extends TiledMap
 			var tileSet = getTileSetFromLayer(tileLayer);
 			var processedPath = getImagePathFromTileSet(tileSet);
 			
-			
 			// could be a regular FlxTilemap if there are no animated tiles
 			var tilemap = new FlxTilemap();
 		
@@ -83,7 +86,7 @@ class TiledLevel extends TiledMap
 				 tileSet.firstGID, 1, 1);
 			var count = tilemap.totalTiles;
 			
-			/*
+			/* Animated tiles?
 			if (tileLayer.properties.contains("animated"))
 			{
 				var tileset = tilesets["level"];
@@ -127,7 +130,6 @@ class TiledLevel extends TiledMap
 				throw "No navigation map found";
 		}
 	}
-
 
 
 	private function getTileSetFromLayer(tileLayer: TiledLayer): TiledTileSet
@@ -177,6 +179,8 @@ class TiledLevel extends TiledMap
 		var layer:TiledObjectLayer;
 		for (layer in layers)
 		{
+			trace("Layer: "+layer.name+ " type: "+layer.type);
+
 			if (layer.type != TiledLayerType.OBJECT)
 				continue;
 			var objectLayer:TiledObjectLayer = cast layer;
@@ -186,10 +190,11 @@ class TiledLevel extends TiledMap
 			{
 				for (o in objectLayer.objects)
 				{
-					if(o.properties.contains("collide") && 
-						(o.objectType == TiledObject.RECTANGLE || o.objectType == TiledObject.POLYGON || o.objectType == TiledObject.ELLIPSE) ) {
+					if(o.objectType == TiledObject.RECTANGLE || o.objectType == TiledObject.POLYGON || o.objectType == TiledObject.ELLIPSE)  {
 						//deal with collision mesh
-						createCollisionShape(o);
+						if(o.properties.contains("collide")) createCollisionShape(o, collisionMeshes);
+						else if(o.properties.contains("spawn") && o.properties.get("spawn") != "player") createCollisionShape(o, spawnMeshes);
+						else if(o.properties.contains("spawn") && o.properties.get("spawn") == "player") createCollisionShape(o, playerSpawns);
 					}
 					else if(o.objectType == TiledObject.TILE) {
 					  //load it as a tile based scenery
@@ -209,7 +214,7 @@ class TiledLevel extends TiledMap
 		return list;
 	}
 
-	private function createCollisionShape(object:TiledObject) {
+	private function createCollisionShape(object:TiledObject, meshes:Array<Shape> ) {
 		
 		switch( object.objectType){
 		
@@ -226,7 +231,7 @@ class TiledLevel extends TiledMap
 
 				trace("Polygon: "+pointsStr);
 				var napeShape = new Polygon(objectPointsToVec2List(object));
-				collisionMeshes.push(napeShape);
+				meshes.push(napeShape);
 			
 			case TiledObject.RECTANGLE:
 				
@@ -235,13 +240,13 @@ class TiledLevel extends TiledMap
 				trace("Rect: "+x+" "+y+" "+object.width+" "+object.height);
 
 				var napeShape = new Polygon(Polygon.rect(x, y, object.width, object.height, false));
-				collisionMeshes.push(napeShape);
+				meshes.push(napeShape);
 	
 			case TiledObject.ELLIPSE:
 				var napeShape = new Circle((object.height+object.width)/4, new Vec2(object.x+(object.width)/2, object.y+object.height/2));
-				collisionMeshes.push(napeShape);
+				meshes.push(napeShape);
 		}
-		trace(collisionMeshes.length);
+		trace(meshes.length);
 	}
 
 	
@@ -257,7 +262,7 @@ class TiledLevel extends TiledMap
 		//decorative sprites
 		var levelsDir:String = "assets/tiled/";
 		
-		var decoSprite:FlxSprite = new FlxSprite(0, 0, processedPath);//levelsDir + tileImagesSource.source);
+		var decoSprite:FlxSprite = new FlxSprite(0, 0, processedPath);
 		if (decoSprite.width != object.width ||
 			decoSprite.height != object.height)
 		{
@@ -265,7 +270,7 @@ class TiledLevel extends TiledMap
 			decoSprite.setGraphicSize(object.width, object.height);
 		}
 		decoSprite.setPosition(object.x, object.y - decoSprite.height);
-		decoSprite.origin.set(0, decoSprite.height);
+		decoSprite.origin.set(decoSprite.width/2, decoSprite.height);
 		if (object.angle != 0)
 		{
 			decoSprite.angle = object.angle;
@@ -284,33 +289,13 @@ class TiledLevel extends TiledMap
 	
 	private function loadObject(object:TiledObject, g:TiledObjectLayer, group:FlxTypedGroup<FlxSprite>)
 	{
-		/*var x:Int = o.x;
-		var y:Int = o.y;
-		
-		// objects in tiled are aligned bottom-left (top-left in flixel)
-		if (o.gid != -1)
-			y -= g.map.getGidOwner(o.gid).tileHeight;
-		
-		var tileset = g.map.getGidOwner(o.gid);
-		var obj = new FlxSprite(x, y, c_PATH_LEVEL_TILESHEETS + tileset.imageSource);
-		group.add(obj);
-		*/
-		//var tilesImageCollection:TiledTileSet = this.getTileSet("grassland_tiles2");
-
-		//tilesImageCollection.
 		var tileset:TiledTileSet = getTileSetFromLayer(g);
 		var tileIndex = object.gid-tileset.firstGID;
-		
-		//trace(tileIndex+" of "+tileset.tileWidth+" x "+tileset.tileHeight);
-	
-		
-		//decorative sprites
-	//	var levelsDir:String = "assets/tiled/";
-		//		var imagePath 		= new Path(tileset.imageSource);
-			var processedPath 	= getImagePathFromTileSet(tileset);// c_PATH_LEVEL_TILESHEETS + imagePath.file + "." + imagePath.ext;
+
+		var processedPath 	= getImagePathFromTileSet(tileset);
 	
 
-		var decoSprite:FlxSprite = new FlxSprite(0, 0);//, processedPath);//levelsDir + tileImagesSource.source);
+		var decoSprite:FlxSprite = new FlxSprite(0, 0);
 		decoSprite.loadGraphic(processedPath, true, tileset.tileWidth, tileset.tileHeight);
     decoSprite.animation.frameIndex = tileIndex;
 	
@@ -321,7 +306,7 @@ class TiledLevel extends TiledMap
 			decoSprite.setGraphicSize(object.width, object.height);
 		}
 		decoSprite.setPosition(object.x, object.y - decoSprite.height);
-		decoSprite.origin.set(decoSprite.width/2, decoSprite.height);
+		//decoSprite.origin.set(decoSprite.width/2, decoSprite.height);
 		if (object.angle != 0)
 		{
 			decoSprite.angle = object.angle;

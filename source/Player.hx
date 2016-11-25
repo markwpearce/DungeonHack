@@ -12,6 +12,11 @@ import Character;
 
 class Player extends Character
 {
+
+  public var exp: Int = 0;
+  public var nextLevel: Int = 20;
+  private var secondsSinceLastMove: Float = 0;
+ 
   
   public function new(?X:Float=0, ?Y:Float=0)
   {
@@ -24,8 +29,13 @@ class Player extends Character
   
   override public function update(elapsed:Float):Void
   {
+     if(getQuit()) {
+       FlxG.switchState(new MenuState());
+     }
+     
      if(getMelee()) {
        characterMelee();
+       secondsSinceLastMove = -1;
      }
      else {
        movement(elapsed);
@@ -71,6 +81,7 @@ class Player extends Character
   }
 
   private function getMelee():Bool {
+    
     var attack = FlxG.keys.anyJustPressed([SPACE]);
     if(!attack && FlxG.gamepads.lastActive != null) {
       var gp = FlxG.gamepads.lastActive;
@@ -80,9 +91,51 @@ class Player extends Character
     return attack;
   }
 
+  private function getQuit():Bool {
+    var exit = FlxG.keys.anyJustPressed([ESCAPE]);
+    if(!exit && FlxG.gamepads.lastActive != null) {
+      var gp = FlxG.gamepads.lastActive;
+      exit = gp.anyJustPressed([FlxGamepadInputID.BACK]);
+    }
+
+    return exit;
+  }
+
   private function movement(elapsed: Float):Void
   {
     var input = getInput();
+    if(input.isEmpty()) {
+      secondsSinceLastMove += elapsed;
+      if(secondsSinceLastMove > 1 && alive) {
+        health = Math.round(Math.min(health+2, maxHealth));
+        secondsSinceLastMove = 0;
+      }
+    }
+    else {
+       secondsSinceLastMove = 0;
+    }
+    
     characterMove(elapsed, input);
+  }
+
+
+  override public function onKilledSomething(entity: Character) {
+    var moreExp = Math.round(entity.maxHealth/5);
+    exp += moreExp;
+    PopText.show(getBodyPosition(), "+"+moreExp, flixel.util.FlxColor.WHITE);
+   
+    if(exp > nextLevel) {
+      exp = exp % nextLevel;
+      nextLevel = Math.round(nextLevel*1.2);
+      maxHealth = Math.round(maxHealth*1.5);
+      health = maxHealth;
+      level++;
+      PopText.showCenter("LEVEL UP!", flixel.util.FlxColor.WHITE, true, true);
+    }
+  }
+
+  override public function onDied() {
+    PopText.showCenter("GAME OVER!", flixel.util.FlxColor.RED, true, true);
+    super.onDied();
   }
 }

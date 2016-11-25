@@ -246,7 +246,7 @@
    </properties>
    <ellipse/>
   </object>
-  <object id="40" type="Collider" x="604.302" y="133.067" width="22.011" height="22.011">
+  <object id="40" type="Collider" x="608.302" y="131.067" width="22.011" height="22.011">
    <properties>
     <property name="collide" type="bool" value="true"/>
    </properties>
