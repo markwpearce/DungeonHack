@@ -13,6 +13,7 @@ class MenuState extends FlxState
 	private var _btnPlay:FlxButton;
 	private var _btnQuit:FlxButton;
 	private var bkgrnd: FlxSprite;
+	private var verText: FlxText;
 
 	override public function create():Void
 	{
@@ -23,10 +24,16 @@ class MenuState extends FlxState
  		_btnQuit = new FlxButton(0, 0, "Quit", clickQuit);
 		_btnQuit.screenCenter();
 		_btnQuit.y+=30;
- 		add(bkgrnd);
+
+		verText = new FlxText(0,0,0,"Version 0.1.0");
+		verText.alignment = FlxTextAlign.CENTER;
+		verText.screenCenter();
+		verText.y+=150;
+		add(bkgrnd);
 		add(_btnPlay);
 		add(_btnQuit);
-		 	
+		add(verText);
+ 		
 
  		super.create();
 	}
