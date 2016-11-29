@@ -1,9 +1,9 @@
 package;
 
 import flixel.FlxGame;
-import openfl.Lib;
 import openfl.display.Sprite;
-import flixel.FlxG;
+import dungeonhack.states.MenuState;
+
 
 class Main extends Sprite
 {
