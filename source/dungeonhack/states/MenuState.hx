@@ -33,7 +33,7 @@ class MenuState extends FlxState
 		add(_btnPlay);
 		add(_btnQuit);
 		add(verText);
- 		FlxG.sound.playMusic(AssetPaths.prologue__ogg, 1, true);
+ 		FlxG.sound.playMusic(AssetPaths.prologue__ogg, 0.8, true);
  		
  		super.create();
 	}

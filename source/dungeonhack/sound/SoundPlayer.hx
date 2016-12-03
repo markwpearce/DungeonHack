@@ -35,10 +35,14 @@ class SoundPlayer extends FlxBasic {
 
     if(useProximity) {
       sound.proximity(emitter.x, emitter.y, SoundGlobal.soundListener, 400);
+      sound.volume = soundGroup.volume;
+      trace("proximity: "+emitter.x+", "+emitter.y+" vs "+SoundGlobal.soundListener.x+", " + SoundGlobal.soundListener.y +" = "+sound.getActualVolume());
+      
     }
     if(loop) {
       persistentSounds.push(sound);
     }
+    sound.play();
 
     return sound;
   }

@@ -28,6 +28,15 @@ class Player extends Character
       }
       name = "Player";
   }
+
+  override public function setUpSounds() {
+    meleeSounds.add(AssetPaths.swish_10__wav);
+    meleeSounds.add(AssetPaths.swish_7__wav);
+    meleeSounds.add(AssetPaths.swish_8__wav);
+    meleeSounds.add(AssetPaths.swish_9__wav);
+    hurtSounds.add(AssetPaths.gah__wav);
+    hurtSounds.add(AssetPaths.alex_audio__hurt00_thm_adventure__wav);
+  }
   
   override public function update(elapsed:Float):Void
   {
@@ -129,15 +138,17 @@ class Player extends Character
     if(exp >= nextLevel) {
       exp = exp % nextLevel;
       nextLevel = Math.round(nextLevel*1.2);
-      maxHealth = Math.round(maxHealth*1.2);
+      maxHealth = Math.round(maxHealth*1.3);
       health = maxHealth;
       level++;
       PopText.showCenter("LEVEL UP!", flixel.util.FlxColor.WHITE, true, true);
+      soundPlayer.play(AssetPaths.levelup__wav);
     }
   }
 
   override public function onDied() {
     PopText.showCenter("GAME OVER!", flixel.util.FlxColor.RED, true, true);
+    soundPlayer.play(AssetPaths.game_over_evil__wav);
     super.onDied();
   }
 }

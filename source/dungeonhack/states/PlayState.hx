@@ -97,8 +97,8 @@ class PlayState extends FlxState
 		add(screenUi);
 		//FlxNapeSpace.drawDebug = true;
 		
-		FlxG.sound.playMusic(AssetPaths.Dark_Amb__ogg, 1, true);
- 		
+		FlxG.sound.playMusic(AssetPaths.Dark_Amb__ogg, 0.8, true);
+ 		FlxG.sound.pause;
 		super.create();
 		
 	}

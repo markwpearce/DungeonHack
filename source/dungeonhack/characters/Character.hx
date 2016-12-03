@@ -72,8 +72,10 @@ class Character extends FlxNapeSprite
   public var spriteTileSize = 128;
 
   public var soundPlayer: SoundPlayer;
+  public var quietSoundPlayer: SoundPlayer;
   public var walkSounds: SoundCycler;
   public var meleeSounds: SoundCycler;
+  public var hurtSounds: SoundCycler;
   
 
   public function new(cType:CharacterType, maxHealthVal:Int=20, maxSpeedVal:Float=200, X:Float=0, Y:Float=0, ?characterSpriteSheet:FlxGraphicAsset, spriteWidth:Int=128, spriteHeight:Int=128)
@@ -84,8 +86,10 @@ class Character extends FlxNapeSprite
     loadGraphic(characterSpriteSheet, true, spriteWidth, spriteHeight);
     origin.set(spriteWidth/2,spriteHeight*0.75);
     soundPlayer = new SoundPlayer(this);
+    quietSoundPlayer = new SoundPlayer(this, dungeonhack.sound.SoundGlobal.quietSoundEffectsGroup);
     meleeSounds = new SoundCycler(soundPlayer);
-    walkSounds = new SoundCycler(soundPlayer);
+    walkSounds = new SoundCycler(quietSoundPlayer, [], 500);
+    hurtSounds = new SoundCycler(soundPlayer);
     
   
     setUpPhysics();
@@ -104,6 +108,8 @@ class Character extends FlxNapeSprite
     maxSpeed = maxSpeedVal;
 
     setUpAnimations();
+    setUpSounds();
+    setUpWalkSounds();
   }
 
   public function setUpPhysics() {
@@ -119,7 +125,19 @@ class Character extends FlxNapeSprite
     addAnimation("move", 4, 8);
     addAnimation("melee", 12, 4);
     addAnimation("hit", 18, 2);
-    addAnimation("die",18, 6);
+    addAnimation("die", 18, 6);
+  }
+
+  public function setUpWalkSounds() {
+     walkSounds.add(AssetPaths.slime2__wav);
+     walkSounds.add(AssetPaths.slime3__wav);
+     walkSounds.add(AssetPaths.slime4__wav);
+     walkSounds.add(AssetPaths.slime5__wav);
+     walkSounds.add(AssetPaths.slime6__wav);
+  }
+
+  public function setUpSounds() {
+     //nothing
   }
 
   public function onKilledSomething(entity: Character) {
@@ -135,6 +153,7 @@ class Character extends FlxNapeSprite
     health -= damage;
     health = Math.round(health);
     health = Math.max(0, health);
+    hurtSounds.play();
     if(health == 0) {
       alive = false;
     }
@@ -351,6 +370,7 @@ class Character extends FlxNapeSprite
       body.velocity.set(new nape.geom.Vec2(getNormalizedSpeed(elapsed, speedPercentage), 0));
       body.velocity.rotate(angleRad);
       pointing.angle = angleRad;
+      walkSounds.play();
       playAnimation("move");
     } 
     else {
@@ -392,7 +412,7 @@ class Character extends FlxNapeSprite
     var middleOfHitZone = body.position.add(forwardVector.rotate(pointing.angle).mul(meleeStats.distance/2));
     var shapes:ShapeList = FlxNapeSpace.space.shapesInCircle(middleOfHitZone, meleeStats.distance/2);
     
-    
+    meleeSounds.play();
     var hitCharacters = new Array<Character>();
     for(shape in shapes) {
       var entity:Character  = shape.userData.character;
