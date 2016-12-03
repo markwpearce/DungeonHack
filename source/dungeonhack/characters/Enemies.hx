@@ -84,8 +84,8 @@ class Skeleton extends Enemy {
     addAnimation("idle", 0, 4, true);
     addAnimation("move", 4, 8);
     addAnimation("melee", 12, 4);
-    addAnimation("hit", 20, 2);
-    addAnimation("die",18, 8);
+    addAnimation("hit", 20, 3);
+    addAnimation("die",20, 8);
   }
 
   override public function setUpSounds() {
