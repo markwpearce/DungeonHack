@@ -11,7 +11,7 @@ import flash.system.System;
 class MenuState extends FlxState
 {
 
-  public static var VERSION:String = "0.2.0";
+  public static var VERSION:String = "0.2.1";
 
 
 	private var bkgrnd: FlxSprite;
