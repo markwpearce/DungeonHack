@@ -1,0 +1,23 @@
+{
+  "Game By": {
+    "name": "Mark Pearce",
+    "web": "https://markwpearce.itch.io/"
+  },
+  "Art": [{
+    "name":"Clint Bellanger",
+    "note": "Character art, animations and tilesets",
+    "web": "http://opengameart.org/users/clint-bellanger",
+    "licence": "CC-BY 3.0"
+    },
+    {
+      "name": "Birgitte Werner",
+      "note": "Title screen",
+      "web": "https://pixabay.com/en/users/werner22brigitte-5337/",
+      "licence": "Public Domain"
+    }
+  ],
+  "Sound" : [
+
+  ]
+
+}

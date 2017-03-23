@@ -7,6 +7,7 @@ import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flash.system.System;
+import flixel.util.FlxColor;
 
 class MenuState extends FlxState
 {
@@ -20,6 +21,7 @@ class MenuState extends FlxState
   private var selectText: FlxText;
   private var buttons: Array<FlxButton> = new Array<FlxButton>();
   private var buttonHeight:Int = 30;
+  private var horizontalOffset = 170;
   private var activeButtonIndex:Int = -1;
 
 	override public function create():Void
@@ -29,13 +31,14 @@ class MenuState extends FlxState
     add(bkgrnd);
 		
 		addButton("Play", clickPlay);
-		addButton("Quit", clickQuit);
-    addButton("Credits");
+		addButton("Credits");
     addButton("Debug Level");
-
-    selectText = new FlxText(0,0,0,"->                            	<-");
+    addButton("Quit", clickQuit);
+    
+    selectText = new FlxText(0,0,0,"->                                  	<-");
 		selectText.alignment = FlxTextAlign.CENTER;
 		selectText.screenCenter();
+    selectText.x+=horizontalOffset;
     selectText.bold = true;
     add(selectText);
     setActiveButtonIndex(0);
@@ -49,8 +52,12 @@ class MenuState extends FlxState
 
   private function addButton(name:String, ?OnClick:Null<Void -> Void> ):Void {
     var button:FlxButton = new FlxButton(0, 0, name, OnClick);
+    button.makeGraphic(100, buttonHeight, FlxColor.TRANSPARENT);
+    button.label.setFormat("assets/fonts/Pixel Musketeer.otf", 16, FlxColor.WHITE,
+      FlxTextAlign.CENTER,FlxTextBorderStyle.SHADOW);
     button.screenCenter();
     button.y += (buttons.length * buttonHeight);
+    button.x +=horizontalOffset;
     buttons.push(button);
     add(button);
   }
@@ -59,7 +66,7 @@ class MenuState extends FlxState
     buttonNum = buttonNum < 0 ?  0 : buttonNum;
     buttonNum = buttonNum > buttons.length-1 ? buttons.length-1 : buttonNum;
     activeButtonIndex = buttonNum;
-    selectText.y = buttons[activeButtonIndex].y+4;
+    selectText.y = buttons[activeButtonIndex].y+8;
   }
 
   private function addFinePrint() {
@@ -68,11 +75,13 @@ class MenuState extends FlxState
     byText = new FlxText(0,0,0,"A game by Mark Pearce");
 		byText.alignment = FlxTextAlign.CENTER;
 		byText.screenCenter();
+    byText.x+=horizontalOffset;
 		byText.y=height-50;
 		verText = new FlxText(0,0,0,"Version "+VERSION);
 		verText.alignment = FlxTextAlign.CENTER;
 		verText.screenCenter();
 		verText.y=height-35;
+    verText.x+=horizontalOffset;
 		add(verText);
 		add(byText);
   }
