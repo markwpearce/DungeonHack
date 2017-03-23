@@ -141,13 +141,13 @@ class Player extends Character
       maxHealth = Math.round(maxHealth*1.3);
       health = maxHealth;
       level++;
-      PopText.showCenter("LEVEL UP!", flixel.util.FlxColor.WHITE, true, true);
+      PopText.showCenter("LEVEL UP", flixel.util.FlxColor.WHITE);
       soundPlayer.play(AssetPaths.levelup__wav);
     }
   }
 
   override public function onDied() {
-    PopText.showCenter("GAME OVER!", flixel.util.FlxColor.RED, true, true);
+    PopText.showCenter("GAME OVER", flixel.util.FlxColor.RED);
     soundPlayer.play(AssetPaths.game_over_evil__wav);
     super.onDied();
   }

@@ -5,7 +5,6 @@ import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import flixel.math.FlxPoint;
 import flixel.FlxState;
-import flixel.FlxG;
 
 class PopText extends FlxText {
 
@@ -24,18 +23,18 @@ class PopText extends FlxText {
     PopText.currentState.add(popText);
   }
 
-  static public function showCenter(text: String = "",color:FlxColor = FlxColor.WHITE, bold:Bool =false, italic:Bool=false,  size:Int=16) {
+  static public function showCenter(text: String = "",color:FlxColor = FlxColor.WHITE, bold:Bool =false, italic:Bool=false,  size:Int=28) {
     if(PopText.currentState == null) {
       return;
     }
     var popText = new PopText(0, 0, 0, text, size);
+    popText.setFormat("assets/fonts/The Wild Breath of Zelda.otf",size, color, FlxTextAlign.CENTER);
+  	popText.bold = bold;
+    popText.italic = italic;
     popText.screenCenter();
     popText.x+=64;
-		popText.y+=32;
-		
-    popText.alignment = FlxTextAlign.CENTER;
-    popText.addFormat(new FlxTextFormat(color, bold, italic));
-    FlxTween.color(popText, 3, color, FlxColor.TRANSPARENT, {startDelay: .5, onComplete: popText.completeTween, type: FlxTween.ONESHOT });
+		popText.y+=24;
+	  FlxTween.color(popText, 3, color, FlxColor.TRANSPARENT, {startDelay: .5, onComplete: popText.completeTween, type: FlxTween.ONESHOT });
     popText.scrollFactor.set(0, 0);
     PopText.currentState.add(popText);
   }
