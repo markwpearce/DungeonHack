@@ -28,7 +28,7 @@ class PopText extends FlxText {
       return;
     }
     var popText = new PopText(0, 0, 0, text, size);
-    popText.setFormat("assets/fonts/The Wild Breath of Zelda.otf",size, color, FlxTextAlign.CENTER);
+    popText.setFormat(AssetPaths.TheWildBreathofZelda__otf,size, color, FlxTextAlign.CENTER);
   	popText.bold = bold;
     popText.italic = italic;
     popText.screenCenter();

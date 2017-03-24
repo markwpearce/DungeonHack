@@ -32,7 +32,7 @@
 	<assets path="assets" />
 	<assets path="assets/sounds" include="*.mp3" if="flash" />
 	<assets path="assets/sounds" include="*.ogg" unless="flash" />
-
+  <assets path="assets/data" include="*.json" unless="flash" />
 
 	<!-- _______________________________ Libraries ______________________________ -->
 

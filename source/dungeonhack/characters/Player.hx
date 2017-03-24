@@ -10,7 +10,7 @@ import flixel.math.FlxPoint;
 
 import dungeonhack.ui.*;
 import dungeonhack.characters.Character;
-import dungeonhack.states.MenuState;
+import dungeonhack.states.TitleState;
 
 class Player extends Character
 {
@@ -40,10 +40,6 @@ class Player extends Character
   
   override public function update(elapsed:Float):Void
   {
-     if(getQuit()) {
-       FlxG.switchState(new MenuState());
-     }
-     
      if(getMelee()) {
        characterMelee();
        secondsSinceLastMove = -1;
@@ -100,16 +96,6 @@ class Player extends Character
     }
 
     return attack;
-  }
-
-  private function getQuit():Bool {
-    var exit = FlxG.keys.anyJustPressed([ESCAPE]);
-    if(!exit && FlxG.gamepads.lastActive != null) {
-      var gp = FlxG.gamepads.lastActive;
-      exit = gp.anyJustPressed([FlxGamepadInputID.BACK]);
-    }
-
-    return exit;
   }
 
   private function movement(elapsed: Float):Void

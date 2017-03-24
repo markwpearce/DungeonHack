@@ -2,7 +2,7 @@
 OLD_VERSION=$(head -n 1 version.txt)
 NEW_VERSION=`awk -F. '/[0-9]+\./{$NF++;print}' OFS=. <<< echo version.txt `;
 
-declare -a files=('./Project.xml' './source/dungeonhack/states/MenuState.hx' './version.txt');
+declare -a files=('./Project.xml' './source/dungeonhack/states/TitleState.hx' './version.txt');
 
 
 echo "Updating $OLD_VERSION to $NEW_VERSION in ${files[@]} ..."
