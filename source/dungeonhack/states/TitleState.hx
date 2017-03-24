@@ -14,7 +14,6 @@ class TitleState extends MenuState
 	private var byText: FlxText;
   private var verText: FlxText;
  
-
 	override public function create():Void
 	{		
 
