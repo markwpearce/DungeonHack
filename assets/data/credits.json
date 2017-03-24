@@ -1,12 +1,8 @@
 {
-  "Game By": {
-    "name": "Mark Pearce",
-    "web": "https://markwpearce.itch.io/"
-  },
   "Art": [{
     "name":"Clint Bellanger",
     "note": "Character art, animations and tilesets",
-    "web": "http://opengameart.org/users/clint-bellanger",
+    "web": "http://clintbellanger.net/",
     "licence": "CC-BY 3.0"
     },
     {
@@ -16,7 +12,33 @@
       "licence": "Public Domain"
     }
   ],
+  "Music" : [
+    {
+      "name": "Philippe Groarke",
+      "note": "'Dark Ambience'",
+      "web": "https://philippegroarke.com/",
+      "licence": "CC-BY-SA 3.0"
+    },
+    {
+      "name": "Telaron",
+      "note": "'Prologue'",
+      "web": "https://opengameart.org/users/telaron",
+      "licence": "CC-BY-SA 3.0"
+    }
+  ],
   "Sound" : [
+    {
+      "name": "Jesús Lastra",
+      "note": "Sound effects",
+      "web": "https://jalastram.wordpress.com/",
+      "licence": "CC-BY 3.0"
+    },
+    {
+      "name": "artisticdude",
+      "note": "Sound effects",
+      "web": "https://opengameart.org/users/artisticdude",
+      "licence": "CC-BY-SA 3.0"
+    }
 
   ]
 

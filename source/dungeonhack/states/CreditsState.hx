@@ -8,13 +8,23 @@ import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 
 
+typedef Credit = {
+  name:String,
+  note:String,
+  web:String,
+  licence:String
+};
+
 class CreditsState extends MenuState
 { 
   private var bkgrndDimmer: FlxSprite;
 
-  private var credits:Dynamic;
+  private var credits:{
+    Art:Array<Credit>,
+    Music:Array<Credit>,
+    Sound:Array<Credit>
+  };
   
-
   private var textLines = new Array<FlxText>();
 
   private var nextLineY: Int;
@@ -42,21 +52,47 @@ class CreditsState extends MenuState
 
   private function createLines() {
     createLine("DungeonHack", true, 0);
-    createLine("A Game By Mark Pearce", false, 1);
+    createLine("A Game By Mark Pearce", false, 0);
+    createLine("", false, 1);
+    createLine("------------", true, 0);
+    createLine("", false, 1);
+
+    var creditTypes = ["Art", "Music", "Sound"];
+
+    for(creditType in creditTypes) {
+      createLine(creditType, true, 2);
+      var creditsList:Array<Credit> = Reflect.field(credits, creditType);
+      for(credit in creditsList) {
+        createLine(credit.name, false, 2);
+        if(credit.web != null) {
+          createLine(credit.web, false, 3);
+        }
+        if(credit.note != null) {
+          createLine(credit.note, false, 3);
+        }
+        if(credit.licence != null) {
+          createLine("Licence: "+credit.licence, false, 3);
+        }
+        createLine("", false, 2);
+      }
+      createLine("------------", true, 1);    
+    }
   }
+
+
 
   private function createLine(text:String, heading:Bool, level:Int):Void {
     if(!heading) {
       level += 2;
     }
-    var fontSize = 28-level*4;
+    var fontSize = 32-level*3;
     var font = heading ?  AssetPaths.TheWildBreathofZelda__otf : AssetPaths.PixelMusketeer__otf;
     var color = FlxColor.WHITE;
-    var text = new FlxText(0,0, 500, text, fontSize);
+    var text = new FlxText(0,0, 600, text, fontSize);
     text.setFormat(font, fontSize, color, FlxTextAlign.CENTER, FlxTextBorderStyle.SHADOW);
     text.screenCenter();
     text.y = nextLineY;
-    nextLineY += fontSize+20;
+    nextLineY += Math.ceil(fontSize*1.5);
     add(text);
     textLines.push(text);
   }
@@ -71,8 +107,11 @@ class CreditsState extends MenuState
       for(line in textLines) {
         line.y-=0.5;
       }
+      if(textLines[textLines.length-1].y < -100) {
+        goToTitle();
+      }
     }
-     super.update(elapsed);
+    super.update(elapsed);
 	}
 
   private function goToTitle():Void {
