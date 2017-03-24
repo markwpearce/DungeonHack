@@ -8,7 +8,7 @@ import flash.system.System;
 class TitleState extends MenuState
 {
 
-  public static var VERSION:String = "0.2.1";
+  public static var VERSION:String = "0.2.2";
 
 
 	private var byText: FlxText;
