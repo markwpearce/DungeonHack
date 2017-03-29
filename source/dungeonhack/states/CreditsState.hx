@@ -15,6 +15,12 @@ typedef Credit = {
   licence:String
 };
 
+enum LineType {
+  HEAD;
+  SUBHEAD;
+  DETAIL;
+}
+
 class CreditsState extends MenuState
 { 
   private var bkgrndDimmer: FlxSprite;
@@ -51,42 +57,57 @@ class CreditsState extends MenuState
 
 
   private function createLines() {
-    createLine("DungeonHack", true, 0);
-    createLine("A Game By Mark Pearce", false, 0);
-    createLine("", false, 1);
-    createLine("------------", true, 0);
-    createLine("", false, 1);
+    createLine("DungeonHack", HEAD, 0);
+    createLine("A Game By Mark Pearce", SUBHEAD, 0);
+    createEmptySpace();
+    createSeparator();
+    createEmptySpace();
 
     var creditTypes = ["Art", "Music", "Sound"];
 
     for(creditType in creditTypes) {
-      createLine(creditType, true, 2);
+      createLine(creditType, HEAD, 1);
       var creditsList:Array<Credit> = Reflect.field(credits, creditType);
       for(credit in creditsList) {
-        createLine(credit.name, false, 2);
+        createLine(credit.name, SUBHEAD, 2);
         if(credit.web != null) {
-          createLine(credit.web, false, 3);
+          createLine(credit.web, DETAIL, 3);
         }
         if(credit.note != null) {
-          createLine(credit.note, false, 3);
+          createLine(credit.note, DETAIL, 3);
         }
         if(credit.licence != null) {
-          createLine("Licence: "+credit.licence, false, 3);
+          createLine("Licence: "+credit.licence, DETAIL, 3);
         }
-        createLine("", false, 2);
+        createEmptySpace();
       }
-      createLine("------------", true, 1);    
+      createSeparator();    
     }
+  }
+
+  private function createSeparator(): Void {
+    createLine("------------", HEAD, 1); 
+  }
+
+  private function createEmptySpace(): Void {
+    createLine("", SUBHEAD, 2);
   }
 
 
 
-  private function createLine(text:String, heading:Bool, level:Int):Void {
-    if(!heading) {
-      level += 2;
+  private function createLine(text:String, lineType:LineType, level:Int):Void {
+    var font = AssetPaths.TheWildBreathofZelda__otf;
+    switch(lineType) {
+      case HEAD:
+        font = AssetPaths.TheWildBreathofZelda__otf;
+      case SUBHEAD:
+        level += 2;
+        font = AssetPaths.PixelMusketeer__otf;
+      case DETAIL:
+        font = null;
+        level += 4;
     }
     var fontSize = 32-level*3;
-    var font = heading ?  AssetPaths.TheWildBreathofZelda__otf : AssetPaths.PixelMusketeer__otf;
     var color = FlxColor.WHITE;
     var text = new FlxText(0,0, 600, text, fontSize);
     text.setFormat(font, fontSize, color, FlxTextAlign.CENTER, FlxTextBorderStyle.SHADOW);
