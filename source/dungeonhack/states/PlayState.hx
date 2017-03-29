@@ -8,6 +8,7 @@ import flixel.group.FlxGroup;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.math.FlxRandom;
 import flixel.math.FlxPoint;
+import flixel.system.scaleModes.*;
 import flixel.util.FlxSort;
 
 import flixel.addons.nape.FlxNapeSpace;
@@ -49,10 +50,11 @@ class PlayState extends FlxState
 		random = new FlxRandom();
     enemies = new Array<Enemy>();
     entities = new FlxGroup();
-		FlxG.camera.width = FlxG.width+128;
-		FlxG.camera.height = FlxG.height+128;
-		FlxG.camera.setPosition(-64, -64);
+		//FlxG.camera.width = FlxG.width+128;
+		//FlxG.camera.height = FlxG.height+128;
+		//FlxG.camera.setPosition(-64, -64);
 		FlxG.camera.zoom = 1.5;
+    //FlxG.scaleMode = new PixelPerfectScaleMode();
 		PopText.currentState = this;
 
     FlxNapeSpace.init();

@@ -32,8 +32,7 @@ class PopText extends FlxText {
   	popText.bold = bold;
     popText.italic = italic;
     popText.screenCenter();
-    popText.x+=64;
-		popText.y+=24;
+    popText.y-=24;
 	  FlxTween.color(popText, 3, color, FlxColor.TRANSPARENT, {startDelay: .5, onComplete: popText.completeTween, type: FlxTween.ONESHOT });
     popText.scrollFactor.set(0, 0);
     PopText.currentState.add(popText);
