@@ -345,7 +345,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup name="Walls" visible="0">
+ <objectgroup name="Walls">
   <properties>
    <property name="tileset" value="dungeon_walls"/>
   </properties>
@@ -1021,44 +1021,44 @@
    <polygon points="0,0 -64,-32 32,-96 96,-48"/>
   </object>
  </objectgroup>
- <objectgroup name="Spawns" visible="0">
-  <object id="582" x="1184" y="136" width="112" height="104">
+ <objectgroup name="Spawns">
+  <object id="582" type="PlayerSpawn" x="1184" y="136" width="112" height="104">
    <properties>
     <property name="spawn" value="player"/>
    </properties>
    <ellipse/>
   </object>
-  <object id="584" x="1776" y="496" width="112" height="104">
+  <object id="584" type="EnemySpawn" x="1776" y="496" width="112" height="104">
    <properties>
     <property name="spawn" value="enemy"/>
    </properties>
    <ellipse/>
   </object>
-  <object id="585" x="304" y="1208" width="112" height="104">
+  <object id="585" type="EnemySpawn" x="304" y="1208" width="112" height="104">
    <properties>
     <property name="spawn" value="enemy"/>
    </properties>
    <ellipse/>
   </object>
-  <object id="586" x="1504" y="1520" width="112" height="104">
+  <object id="586" type="EnemySpawn" x="1504" y="1520" width="112" height="104">
    <properties>
     <property name="spawn" value="enemy"/>
    </properties>
    <ellipse/>
   </object>
-  <object id="587" x="224" y="656" width="112" height="104">
+  <object id="587" type="EnemySpawn" x="224" y="656" width="112" height="104">
    <properties>
     <property name="spawn" value="enemy"/>
    </properties>
    <ellipse/>
   </object>
-  <object id="601" x="976" y="1560" width="112" height="104">
+  <object id="601" type="EnemySpawn" x="976" y="1560" width="112" height="104">
    <properties>
     <property name="spawn" value="enemy"/>
    </properties>
    <ellipse/>
   </object>
-  <object id="602" x="608" y="168" width="112" height="104">
+  <object id="602" type="EnemySpawn" x="608" y="168" width="112" height="104">
    <properties>
     <property name="spawn" value="enemy"/>
    </properties>

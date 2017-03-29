@@ -32,8 +32,8 @@
 	<assets path="assets" />
 	<assets path="assets/sounds" include="*.mp3" if="flash" />
 	<assets path="assets/sounds" include="*.ogg" unless="flash" />
-  <assets path="assets/data" include="*.json" unless="flash" />
-
+  <assets path="assets/data" include="*.json"/>
+  <assets path="assets/tiled" include="*.tmx"/>
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />

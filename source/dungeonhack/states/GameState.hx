@@ -1,35 +1,9 @@
 package dungeonhack.states;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.FlxState;
-import flixel.text.FlxText;
-import flixel.ui.FlxButton;
-import flixel.math.FlxMath;
-import flixel.math.FlxRandom;
-import flixel.math.FlxPoint;
-import flixel.FlxCamera.FlxCameraFollowStyle;
-import flixel.util.FlxSort;
-import flixel.FlxBasic;
-import flixel.addons.nape.FlxNapeSpace;
-import flixel.addons.nape.FlxNapeSprite;
-import nape.constraint.PivotJoint;
-import nape.geom.AABB;
-import nape.geom.Vec2;
-import nape.phys.Body;
-import nape.phys.BodyList;
-import nape.phys.BodyType;
-import nape.shape.Shape;
-import nape.phys.Material;
-import nape.geom.AABB;
 
 import dungeonhack.characters.*;
 import dungeonhack.characters.Enemies;
-import dungeonhack.ui.*;
-import dungeonhack.sound.*;
-import dungeonhack.maps.TiledLevel;
-
-import flixel.group.FlxGroup;
 
 class GameState extends PlayState
 {
@@ -43,13 +17,13 @@ class GameState extends PlayState
 	{
     super.create();
 
-    setLevelMap("assets/tiled/Dungeon1.tmx");
+    setLevelMap(AssetPaths.Dungeon1__tmx);
 		setPlayer(new Player());
 
 		enemiesByLevel = new Array< Array< String> > ();
 	
 		FlxG.sound.playMusic(AssetPaths.Dark_Amb__ogg, 0.8, true);
- 		FlxG.sound.pause;
+ 		//FlxG.sound.pause;
 	}
 
 	private function addLeveledEnemy() {
@@ -103,12 +77,5 @@ class GameState extends PlayState
 			gameLength = 0;
 		}
 		
-
 	}
-
-
-
-
-
-
 }

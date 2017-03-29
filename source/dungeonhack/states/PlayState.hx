@@ -1,34 +1,25 @@
 package dungeonhack.states;
 
 import flixel.FlxG;
-import flixel.FlxBasic;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.FlxCamera.FlxCameraFollowStyle;
 import flixel.group.FlxGroup;
 import flixel.input.gamepad.FlxGamepadInputID;
-import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
 import flixel.math.FlxPoint;
-import flixel.text.FlxText;
-import flixel.ui.FlxButton;
 import flixel.util.FlxSort;
 
 import flixel.addons.nape.FlxNapeSpace;
 import flixel.addons.nape.FlxNapeSprite;
 
-import nape.constraint.PivotJoint;
-import nape.geom.AABB;
 import nape.geom.Vec2;
 import nape.phys.Body;
-import nape.phys.BodyList;
 import nape.phys.BodyType;
-import nape.shape.Shape;
 import nape.phys.Material;
 import nape.geom.AABB;
 
 import dungeonhack.characters.*;
-import dungeonhack.characters.Enemies;
 import dungeonhack.ui.*;
 import dungeonhack.sound.*;
 import dungeonhack.maps.TiledLevel;
@@ -66,7 +57,7 @@ class PlayState extends FlxState
 
     FlxNapeSpace.init();
 		FlxNapeSpace.space.gravity = new Vec2(0, 0);
-    //FlxNapeSpace.drawDebug = true;
+   
     		
 		levelCollisionSprite = new FlxNapeSprite(0, 0, null, false, true);
 		deadObjectsLayer = new FlxTypedGroup<FlxSprite>();
@@ -74,7 +65,7 @@ class PlayState extends FlxState
 
 
   private function setLevelMap(mapPath: String): Void {
-    level = new TiledLevel("assets/tiled/Dungeon1.tmx");
+    level = new TiledLevel(mapPath);
 		addCollisionMeshesToSpace();
 		playerSpawn = getPlayerStartingLocation();
     // Add backgrounds

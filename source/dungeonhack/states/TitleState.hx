@@ -20,7 +20,7 @@ class TitleState extends MenuState
  		super.create();
 		addButton("Play", clickPlay);
 		addButton("Credits", clickCredits);
-    addButton("Debug Level");
+    addButton("Debug Level", clickDebug);
     addButton("Quit", clickQuit);
 
     setActiveButtonIndex(0);
@@ -49,7 +49,7 @@ class TitleState extends MenuState
 
 	override public function update(elapsed:Float):Void
 	{
-		if(checkInput([ESCAPE], [FlxGamepadInputID.BACK])) {
+    if(checkInput([ESCAPE, Q], [FlxGamepadInputID.BACK])) {
 			clickQuit();
 		}
     else if(checkInput([SPACE, ENTER], [FlxGamepadInputID.X, FlxGamepadInputID.START])) {
@@ -60,6 +60,12 @@ class TitleState extends MenuState
 		}
     else if(checkInput([UP], [FlxGamepadInputID.DPAD_UP])) {
 			setActiveButtonIndex(activeButtonIndex-1);
+		}
+    else if(checkInput([D],[])) {
+			clickDebug();
+		}
+    else if(checkInput([P],[])) {
+			clickPlay();
 		}
 
     super.update(elapsed);
@@ -73,6 +79,11 @@ class TitleState extends MenuState
   private function clickCredits():Void
   { 
      FlxG.switchState(new CreditsState());
+  }
+
+  private function clickDebug():Void
+  { 
+     FlxG.switchState(new DebugState());
   }
 
 	private function clickQuit():Void

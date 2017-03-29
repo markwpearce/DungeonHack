@@ -81,6 +81,7 @@ class TiledLevel extends TiledMap
 		
 			tilemap.offset.x = -tileLayer.offsetX;
 			tilemap.offset.y = -tileLayer.offsetY;
+      trace("Tile Layer: "+tileLayer.name+ " type: "+tileLayer.type+" Path: "+processedPath);
 			tilemap.loadMapFromArray(tileLayer.tileArray, width, height, processedPath,
 				tileSet.tileWidth, tileSet.tileHeight, OFF,
 				 tileSet.firstGID, 1, 1);
@@ -192,9 +193,9 @@ class TiledLevel extends TiledMap
 				{
 					if(o.objectType == TiledObject.RECTANGLE || o.objectType == TiledObject.POLYGON || o.objectType == TiledObject.ELLIPSE)  {
 						//deal with collision mesh
-						if(o.properties.contains("collide")) createCollisionShape(o, collisionMeshes);
-						else if(o.properties.contains("spawn") && o.properties.get("spawn") != "player") createCollisionShape(o, spawnMeshes);
-						else if(o.properties.contains("spawn") && o.properties.get("spawn") == "player") createCollisionShape(o, playerSpawns);
+						if(o.properties.contains("collide")|| o.type.toLowerCase() == "collider") createCollisionShape(o, collisionMeshes);
+						else if((o.properties.contains("spawn") && o.properties.get("spawn") != "player") || o.type.toLowerCase() == "enemyspawn") createCollisionShape(o, spawnMeshes);
+						else if((o.properties.contains("spawn") && o.properties.get("spawn") == "player") || o.type.toLowerCase() == "playerspawn") createCollisionShape(o, playerSpawns);
 					}
 					else if(o.objectType == TiledObject.TILE) {
 					  //load it as a tile based scenery

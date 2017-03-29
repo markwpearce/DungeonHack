@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="32" tilewidth="64" tileheight="32" nextobjectid="12">
- <tileset firstgid="1" name="HolodeckTiles" tilewidth="64" tileheight="32" tilecount="32" columns="4">
-  <image source="holodeckTiles.png" width="256" height="256"/>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="32" tilewidth="64" tileheight="32" nextobjectid="14">
+ <tileset firstgid="1" name="holodeck_tiles" tilewidth="64" tileheight="32" tilecount="32" columns="4">
+  <image source="holodeck_tiles.png" width="256" height="256"/>
  </tileset>
  <tileset firstgid="33" name="navigationtile" tilewidth="64" tileheight="32" tilecount="1" columns="1">
   <image source="navigationtile.png" width="64" height="32"/>
  </tileset>
  <layer name="Background 1" width="16" height="32">
+  <properties>
+   <property name="nocollide" type="bool" value="true"/>
+   <property name="tileset" value="holodeck_tiles"/>
+  </properties>
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -43,6 +47,10 @@
 </data>
  </layer>
  <layer name="Background 2" width="16" height="32" offsetx="32" offsety="16">
+  <properties>
+   <property name="nocollide" type="bool" value="true"/>
+   <property name="tileset" value="holodeck_tiles"/>
+  </properties>
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -79,39 +87,61 @@
 </data>
  </layer>
  <objectgroup name="Collisions">
-  <object id="2" x="528" y="120">
-   <polygon points="0,0 -544,272 -608,192 -48,-64"/>
+  <object id="2" type="Collider" x="528" y="120">
+   <polygon points="0,-16 -560,264 -608,192 -48,-64"/>
   </object>
-  <object id="3" x="768" y="144">
-   <polygon points="0,0 -352,0 -352,-128 0,-128"/>
+  <object id="3" type="Collider" x="768" y="144">
+   <properties>
+    <property name="collide" type="bool" value="true"/>
+   </properties>
+   <polygon points="0,0 -352,0 -352,-80 0,-80"/>
   </object>
-  <object id="4" x="1056" y="360">
-   <polygon points="0,0 -480,-264 -416,-312 16,-64"/>
+  <object id="4" type="Collider" x="1056" y="360">
+   <properties>
+    <property name="collide" type="bool" value="true"/>
+   </properties>
+   <polygon points="-32,-24 -464,-248 -416,-288 16,-64"/>
   </object>
-  <object id="5" x="1008" y="712">
-   <polygon points="0,0 -16,-512 48,-504 48,0"/>
+  <object id="5" type="Collider" x="1008" y="712">
+   <properties>
+    <property name="collide" type="bool" value="true"/>
+   </properties>
+   <polygon points="-16,-48 -16,-512 48,-512 48,-56"/>
   </object>
-  <object id="6" x="448" y="888">
-   <polygon points="0,0 608,-328 672,-264 32,32"/>
+  <object id="6" type="Collider" x="448" y="888">
+   <polygon points="0,0 576,-296 608,-256 48,48"/>
   </object>
-  <object id="7" x="544" y="920">
-   <polygon points="0,0 -576,-336 -608,-240 -48,40"/>
+  <object id="7" type="Collider" x="544" y="920">
+   <properties>
+    <property name="collide" type="bool" value="true"/>
+   </properties>
+   <polygon points="-16,-24 -560,-312 -592,-264 -80,24"/>
   </object>
-  <object id="8" x="32" y="752">
-   <polygon points="0,0 16,-560 -112,-536 -64,-8"/>
+  <object id="8" type="Collider" x="32" y="752">
+   <polygon points="0,0 16,-560 -64,-560 -64,-8"/>
   </object>
-  <object id="9" x="800" y="328">
+  <object id="9" type="Collider" x="800" y="328">
    <polygon points="0,0 -96,40 0,88 80,40"/>
   </object>
-  <object id="10" x="672" y="520">
+  <object id="10" type="Collider" x="672" y="520">
    <polygon points="0,0 -96,40 0,88 96,40"/>
   </object>
-  <object id="11" x="368" y="432">
+  <object id="11" type="Collider" x="368" y="432">
    <polygon points="0,0 -80,48 -176,0 -80,-48"/>
   </object>
  </objectgroup>
- <objectgroup name="Spawns"/>
+ <objectgroup name="Spawns">
+  <object id="12" type="PlayerSpawn" x="320" y="536" width="128.035" height="115.233">
+   <ellipse/>
+  </object>
+  <object id="13" type="EnemySpawn" x="544" y="264" width="144" height="128">
+   <ellipse/>
+  </object>
+ </objectgroup>
  <layer name="Navigation" width="16" height="32">
+  <properties>
+   <property name="tileset" value="navigationtile"/>
+  </properties>
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
