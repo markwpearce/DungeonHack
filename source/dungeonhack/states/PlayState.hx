@@ -8,11 +8,12 @@ import flixel.group.FlxGroup;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.math.FlxRandom;
 import flixel.math.FlxPoint;
-import flixel.system.scaleModes.*;
 import flixel.util.FlxSort;
 
 import flixel.addons.nape.FlxNapeSpace;
 import flixel.addons.nape.FlxNapeSprite;
+
+import flixel.addons.ui.FlxUIState;
 
 import nape.geom.Vec2;
 import nape.phys.Body;
@@ -23,9 +24,10 @@ import nape.geom.AABB;
 import dungeonhack.characters.*;
 import dungeonhack.ui.*;
 import dungeonhack.sound.*;
+import dungeonhack.util.*;
 import dungeonhack.maps.TiledLevel;
 
-class PlayState extends FlxState
+class PlayState extends FlxUIState
 {
 
   private var player:Player;
@@ -50,12 +52,8 @@ class PlayState extends FlxState
 		random = new FlxRandom();
     enemies = new Array<Enemy>();
     entities = new FlxGroup();
-		//FlxG.camera.width = FlxG.width+128;
-		//FlxG.camera.height = FlxG.height+128;
-		//FlxG.camera.setPosition(-64, -64);
 		FlxG.camera.zoom = 1.5;
-    //FlxG.scaleMode = new PixelPerfectScaleMode();
-		PopText.currentState = this;
+    PopText.currentState = this;
 
     FlxNapeSpace.init();
 		FlxNapeSpace.space.gravity = new Vec2(0, 0);
@@ -150,22 +148,16 @@ class PlayState extends FlxState
   }
 
 
-  private function getQuit():Bool {
-    var exit = FlxG.keys.anyJustPressed([ESCAPE]);
-    if(!exit && FlxG.gamepads.lastActive != null) {
-      var gp = FlxG.gamepads.lastActive;
-      exit = gp.anyJustPressed([FlxGamepadInputID.BACK]);
-    }
-
-    return exit;
+  private function doQuit():Void {
+    FlxG.switchState(new TitleState());
   }
 
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 
-    if(getQuit()) {
-      FlxG.switchState(new TitleState());
+    if(CheckInput.check([ESCAPE], [FlxGamepadInputID.BACK])) {
+      doQuit();
     }
     
     if(level == null) {

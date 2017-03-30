@@ -5,6 +5,8 @@ import flixel.text.FlxText;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flash.system.System;
 
+import dungeonhack.util.*;
+
 class TitleState extends MenuState
 {
 
@@ -49,22 +51,22 @@ class TitleState extends MenuState
 
 	override public function update(elapsed:Float):Void
 	{
-    if(checkInput([ESCAPE, Q], [FlxGamepadInputID.BACK])) {
+    if(CheckInput.check([ESCAPE, Q], [FlxGamepadInputID.BACK])) {
 			clickQuit();
 		}
-    else if(checkInput([SPACE, ENTER], [FlxGamepadInputID.X, FlxGamepadInputID.START])) {
+    else if(CheckInput.check([SPACE, ENTER], [FlxGamepadInputID.X, FlxGamepadInputID.START])) {
 			getActiveButtonIndex().onUp.fire();
 		}
-    else if(checkInput([DOWN], [FlxGamepadInputID.DPAD_DOWN])) {
+    else if(CheckInput.check([DOWN], [FlxGamepadInputID.DPAD_DOWN])) {
 			setActiveButtonIndex(activeButtonIndex+1);
 		}
-    else if(checkInput([UP], [FlxGamepadInputID.DPAD_UP])) {
+    else if(CheckInput.check([UP], [FlxGamepadInputID.DPAD_UP])) {
 			setActiveButtonIndex(activeButtonIndex-1);
 		}
-    else if(checkInput([D],[])) {
+    else if(CheckInput.check([D])) {
 			clickDebug();
 		}
-    else if(checkInput([P],[])) {
+    else if(CheckInput.check([P])) {
 			clickPlay();
 		}
 

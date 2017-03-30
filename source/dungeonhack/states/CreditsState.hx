@@ -7,6 +7,7 @@ import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 
+import dungeonhack.util.*;
 
 typedef Credit = {
   name:String,
@@ -121,7 +122,7 @@ class CreditsState extends MenuState
 
   override public function update(elapsed:Float):Void
 	{
-		if(checkInput([ESCAPE, SPACE, ENTER], [FlxGamepadInputID.BACK, FlxGamepadInputID.X, FlxGamepadInputID.START])) {
+		if(CheckInput.check([ESCAPE, SPACE, ENTER], [FlxGamepadInputID.BACK, FlxGamepadInputID.X, FlxGamepadInputID.START])) {
 			goToTitle();
 		}
     if(scrollLines) {

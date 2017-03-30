@@ -2,7 +2,6 @@ package dungeonhack.characters;
 
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.addons.nape.FlxNapeSprite;
-import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 
 

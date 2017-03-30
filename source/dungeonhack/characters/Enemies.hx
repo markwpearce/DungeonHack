@@ -2,6 +2,20 @@ package dungeonhack.characters;
 
 import dungeonhack.characters.Enemy;
 
+class Enemies {
+
+  static public var ENEMY_TYPE_LIST = ["Orc", "OrcArcher", "OrcHeavy", "OrcElite", "Skeleton", "Minotaur"];
+
+  static public function createEnemyByType(enemyName: String, ?x:Int = 0, ?y:Int=0):Enemy {
+    if(ENEMY_TYPE_LIST.indexOf(enemyName) == -1) {
+      throw "Invalid enemy name: "+enemyName;
+    }
+    var enemyClass = Type.resolveClass("dungeonhack.characters."+enemyName);
+    return Type.createInstance(enemyClass, [x,y]);
+   }
+
+}
+
 class OrcArcher extends Enemy {
 
   public function new(?X:Float=0, ?Y:Float=0) {

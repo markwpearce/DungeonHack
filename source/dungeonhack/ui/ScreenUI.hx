@@ -49,24 +49,26 @@ class ScreenUI extends FlxTypedGroup<FlxSprite> {
     var screenX= getScreenX();
     var screenY= getScreenY();
      
-    hpText = new FlxText(screenX+5, screenY+5, 100, "HP", 8);
-    expText = new FlxText(screenX+5, screenY+5+10, 100, "EXP", 8);
-    lvlText = new FlxText(screenX+5+69, screenY+5+10, 100, "LVL", 8);
-    healthBar = new FlxBar(screenX+5+70, screenY+6, FlxBarFillDirection.LEFT_TO_RIGHT, 100, 10, null, "" , 0, 100, true);
+    hpText = new FlxText(5, 5, 100, "HP", 8);
+    expText = new FlxText(5, 15, 100, "EXP", 8);
+    lvlText = new FlxText(5+69, 15, 100, "LVL", 8);
+    healthBar = new FlxBar(5+70, 6, FlxBarFillDirection.LEFT_TO_RIGHT, 100, 10, null, "" , 0, 100, true);
     healthBar.fixedPosition = true;
-    add(healthBar);
-    add(lvlText);
-    add(hpText);
-    add(expText);
+    addFixedSprite(healthBar);
+    addFixedSprite(lvlText);
+    addFixedSprite(hpText);
+    addFixedSprite(expText);
     
-
-    forEach(function(spr:FlxSprite)
-    {
-      spr.scrollFactor.set(0, 0);
-    });
-
     setup = true;
   }
+
+  public function addFixedSprite(sprite:FlxSprite): Void {
+    sprite.x+=getScreenX();
+    sprite.y+=getScreenY();
+    
+    add(sprite);
+    sprite.scrollFactor.set(0,0);
+  };
 
 
   override public function update(elapsed: Float) {

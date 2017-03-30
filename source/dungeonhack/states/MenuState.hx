@@ -38,17 +38,6 @@ class MenuState extends FlxState
     horizontalOffset = hOffset;
   }
 
-  public function checkInput(KeyArray:Array<flixel.input.keyboard.FlxKey>,
-      GPArray:Array<flixel.input.gamepad.FlxGamepadInputID>):Bool {
-    var pressed = FlxG.keys.anyJustPressed(KeyArray);
-    if(!pressed && FlxG.gamepads.lastActive != null) {
-      var gp = FlxG.gamepads.lastActive;
-      pressed = gp.anyJustPressed(GPArray);
-    }
-		return pressed;
-  }
-
-
   public function addButton(name:String, ?OnClick:Null<Void -> Void> ):Void {
     var button:FlxButton = new FlxButton(0, 0, name, OnClick);
     button.makeGraphic(100, buttonHeight, FlxColor.TRANSPARENT);
