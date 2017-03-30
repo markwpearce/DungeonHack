@@ -40,7 +40,7 @@ class DebugState extends PlayState
     for(enemyType in Enemies.ENEMY_TYPE_LIST) {
       enemyLabels.push(new StrNameLabel(enemyType, enemyType));
     }
-    enemySelector = new FlxUIDropDownMenu(5, 25, enemyLabels, addEnemyType);
+    enemySelector = new FlxUIDropDownMenu(5, 30, enemyLabels, addEnemyType);
     screenUi.addFixedSprite(enemySelector);
   } 
 

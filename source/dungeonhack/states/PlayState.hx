@@ -58,7 +58,6 @@ class PlayState extends FlxUIState
     FlxNapeSpace.init();
 		FlxNapeSpace.space.gravity = new Vec2(0, 0);
    
-    		
 		levelCollisionSprite = new FlxNapeSprite(0, 0, null, false, true);
 		deadObjectsLayer = new FlxTypedGroup<FlxSprite>();
   }
