@@ -85,9 +85,6 @@ class TiledLevel
     
     var map: TiledMapWithOffset = new TiledMapWithOffset(mapPath, X, Y);
 
-   FlxG.camera.setScrollBoundsRect(-128, -128, map.fullWidth+128, map.fullHeight+128, true);
-
-
 		loadImages(map);
 		loadObjects(map);
 		
@@ -155,7 +152,28 @@ class TiledLevel
 		if(navigationMap == null) {
 				throw "No navigation map found";
 		}
+
+    tiledMaps.push(map);
   }
+
+
+  private function setScrollBounds() {
+
+   var lowX:Float = 0;
+   var lowY:Float = 0;
+   var maxX:Float = 0;
+   var maxY:Float = 0;
+   
+   for(map in tiledMaps) {
+     lowX = Math.min(lowX, map.x *1.0);
+     lowY = Math.min(lowY, map.y *1.0);
+     maxX = Math.min(maxX, (map.x+map.fullWidth) *1.0);
+     maxY = Math.min(maxY, (map.y+map.fullHeight) *1.0); 
+   }
+
+   FlxG.camera.setScrollBoundsRect(Math.floor(lowX-32), Math.floor(lowY-16), Math.ceil(maxX+32), Math.ceil(maxY+16), true);
+  }
+
 
 	private function getTileSetFromLayer(map: TiledMap, tileLayer: TiledLayer): TiledTileSet
 	{
