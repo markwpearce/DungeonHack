@@ -26,15 +26,34 @@ import nape.geom.Vec2List;
 
 import haxe.io.Path;
 
+
+class TiledMapWithOffset extends TiledMap {
+
+  public var x:Int = 0;
+  public var y:Int = 0;
+
+  public function new(tiledLevel:Dynamic, topLeftX:Int = 0, topLeftY:Int = 0)
+	{
+    super(tiledLevel);
+    x = topLeftX;
+    y = topLeftY;
+  }
+
+}
+
+
 /**
  * @author Samuel Batista
  */
-class TiledLevel extends TiledMap
+class TiledLevel
 {
 	// For each "Tile Layer" in the map, you must define a "tileset" property which contains the name of a tile sheet image 
 	// used to draw tiles in that layer (without file extension). The image file must be located in the directory specified bellow.
 	private inline static var c_PATH_LEVEL_TILESHEETS = "assets/tiled/";
 	
+  public var tiledMaps: Array<TiledMapWithOffset>;
+
+
 	// Array of tilemaps used for collision
 	public var foregroundTiles:FlxGroup;
 	public var objectsLayer: FlxTypedGroup<FlxSprite>;
@@ -50,30 +69,36 @@ class TiledLevel extends TiledMap
 	
 	public function new(tiledLevel:Dynamic)
 	{
-		super(tiledLevel);
-		
-		imagesLayer = new FlxGroup();
+    tiledMaps = new Array<TiledMapWithOffset>();
+    imagesLayer = new FlxGroup();
 		foregroundTiles = new FlxGroup();
 		objectsLayer = new FlxTypedGroup<FlxSprite>();
 		backgroundLayer = new FlxGroup();
 		collisionMeshes = new Array<Shape>();
 		spawnMeshes = new Array<Shape>();
 		playerSpawns = new Array<Shape>();
+    addTiledMap(tiledLevel);
+	}
 
-		FlxG.camera.setScrollBoundsRect(0, 0, fullWidth, fullHeight, true);
+
+  public function addTiledMap(mapPath: String, X:Int = 0, Y:Int = 0): Void {
+    
+    var map: TiledMapWithOffset = new TiledMapWithOffset(mapPath, X, Y);
+
+   FlxG.camera.setScrollBoundsRect(-128, -128, map.fullWidth+128, map.fullHeight+128, true);
 
 
-		loadImages();
-		loadObjects();
+		loadImages(map);
+		loadObjects(map);
 		
 		// Load Tile Maps
-		for (layer in layers)
+		for (layer in map.layers)
 		{
 			
 			if (layer.type != TiledLayerType.TILE) continue;
 			var tileLayer:TiledTileLayer = cast layer;
 			
-			var tileSet = getTileSetFromLayer(tileLayer);
+			var tileSet = getTileSetFromLayer(map, tileLayer);
 			var processedPath = getImagePathFromTileSet(tileSet);
 			
 			// could be a regular FlxTilemap if there are no animated tiles
@@ -82,7 +107,7 @@ class TiledLevel extends TiledMap
 			tilemap.offset.x = -tileLayer.offsetX;
 			tilemap.offset.y = -tileLayer.offsetY;
       trace("Tile Layer: "+tileLayer.name+ " type: "+tileLayer.type+" Path: "+processedPath);
-			tilemap.loadMapFromArray(tileLayer.tileArray, width, height, processedPath,
+			tilemap.loadMapFromArray(tileLayer.tileArray, map.width, map.height, processedPath,
 				tileSet.tileWidth, tileSet.tileHeight, OFF,
 				 tileSet.firstGID, 1, 1);
 			var count = tilemap.totalTiles;
@@ -130,10 +155,9 @@ class TiledLevel extends TiledMap
 		if(navigationMap == null) {
 				throw "No navigation map found";
 		}
-	}
+  }
 
-
-	private function getTileSetFromLayer(tileLayer: TiledLayer): TiledTileSet
+	private function getTileSetFromLayer(map: TiledMap, tileLayer: TiledLayer): TiledTileSet
 	{
 		var tileSheetName:String = tileLayer.properties.get("tileset");
 			
@@ -141,7 +165,7 @@ class TiledLevel extends TiledMap
 				throw "'tileset' property not defined for the '" + tileLayer.name + "' layer. Please add the property to the layer.";
 				
 		var tileSet:TiledTileSet = null;
-		for (ts in tilesets)
+		for (ts in map.tilesets)
 		{
 			if (ts.name == tileSheetName)
 			{
@@ -175,10 +199,10 @@ class TiledLevel extends TiledMap
 		return special;
 	}
 	
-	public function loadObjects()
+	public function loadObjects(map: TiledMap)
 	{
 		var layer:TiledObjectLayer;
-		for (layer in layers)
+		for (layer in map.layers)
 		{
 			trace("Layer: "+layer.name+ " type: "+layer.type);
 
@@ -199,7 +223,7 @@ class TiledLevel extends TiledMap
 					}
 					else if(o.objectType == TiledObject.TILE) {
 					  //load it as a tile based scenery
-						loadObject(o, objectLayer, objectsLayer);	
+						loadObject(map, o, objectLayer, objectsLayer);	
 					}
 				}
 			}
@@ -251,14 +275,13 @@ class TiledLevel extends TiledMap
 	}
 
 	
-	private function loadImageObject(object:TiledObject)
+	private function loadImageObject(map: TiledMap, object:TiledObject)
 	{
 		
-		var tilesImageCollection:TiledTileSet = this.getTileSet("imageCollection");
-			var imagePath 		= new Path(tilesImageCollection.imageSource);
-			var processedPath 	= c_PATH_LEVEL_TILESHEETS + imagePath.file + "." + imagePath.ext;
+		var tilesImageCollection:TiledTileSet = map.getTileSet("imageCollection");
+	  var imagePath 		= new Path(tilesImageCollection.imageSource);
+		var processedPath 	= c_PATH_LEVEL_TILESHEETS + imagePath.file + "." + imagePath.ext;
 		
-		//var tileImagesSource:TiledImageTile = processedPath;//tilesImageCollection.getImageSourceByGid(object.gid);
 		
 		//decorative sprites
 		var levelsDir:String = "assets/tiled/";
@@ -288,9 +311,9 @@ class TiledLevel extends TiledMap
 		backgroundLayer.add(decoSprite);
 	}
 	
-	private function loadObject(object:TiledObject, g:TiledObjectLayer, group:FlxTypedGroup<FlxSprite>)
+	private function loadObject(map: TiledMap, object:TiledObject, g:TiledObjectLayer, group:FlxTypedGroup<FlxSprite>)
 	{
-		var tileset:TiledTileSet = getTileSetFromLayer(g);
+		var tileset:TiledTileSet = getTileSetFromLayer(map, g);
 		var tileIndex = object.gid-tileset.firstGID;
 
 		var processedPath 	= getImagePathFromTileSet(tileset);
@@ -361,9 +384,9 @@ class TiledLevel extends TiledMap
 		}*/
 	}
 
-	public function loadImages()
+	public function loadImages(map:TiledMap)
 	{
-		for (layer in layers)
+		for (layer in map.layers)
 		{
 			if (layer.type != TiledLayerType.IMAGE)
 				continue;

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="64" tileheight="32" nextobjectid="155">
+ <tileset firstgid="1" name="flagstone_tiles" tilewidth="64" tileheight="32" tilecount="32" columns="4">
+  <image source="../../flagstone_tiles.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="33" name="navigationtile" tilewidth="64" tileheight="32" tilecount="1" columns="1">
+  <image source="../../navigationtile.png" width="64" height="32"/>
+ </tileset>
+ <tileset firstgid="34" name="dungeon_walls" tilewidth="128" tileheight="128" tilecount="32" columns="8">
+  <image source="../../dungeon_walls.png" width="1024" height="512"/>
+ </tileset>
+ <layer name="Background 1" width="16" height="16">
+  <properties>
+   <property name="nocollide" type="bool" value="true"/>
+   <property name="tileset" value="flagstone_tiles"/>
+  </properties>
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,15,16,19,0,0,0,0,0,0,
+0,0,0,0,0,0,19,8,26,3,21,0,0,0,0,0,
+0,0,0,0,27,1,24,28,22,14,22,9,1,0,0,0,
+0,0,0,11,10,24,19,5,24,13,10,26,21,20,0,0,
+0,0,0,13,22,25,31,5,1,6,3,31,11,21,0,0,
+0,0,11,31,27,13,21,12,3,12,30,3,18,14,24,0,
+0,28,17,19,12,8,4,17,18,24,30,11,23,14,27,26,
+0,29,17,25,8,27,2,8,16,12,14,25,31,31,7,23,
+0,0,12,16,16,1,15,29,8,32,19,2,17,11,13,0,
+0,0,0,1,6,31,16,18,15,12,1,7,10,22,0,0,
+0,0,0,27,2,13,10,15,10,8,8,15,20,7,0,0,
+0,0,0,0,4,2,15,19,15,12,19,25,10,0,0,0,
+0,0,0,0,0,0,4,5,19,26,29,0,0,0,0,0,
+0,0,0,0,0,0,0,28,19,12,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,28,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer name="Background 2" width="16" height="16" offsetx="32" offsety="16">
+  <properties>
+   <property name="nocollide" type="bool" value="true"/>
+   <property name="tileset" value="flagstone_tiles"/>
+  </properties>
+  <data encoding="csv">
+0,0,0,0,0,0,0,30,29,0,0,0,0,0,0,0,
+0,0,0,0,0,0,5,1,8,7,0,0,0,0,0,0,
+0,0,0,0,24,9,22,9,25,25,20,12,0,0,0,0,
+0,0,0,16,6,23,10,5,24,31,23,21,12,0,0,0,
+0,0,0,7,19,29,3,32,23,23,28,22,17,0,0,0,
+0,0,13,4,32,8,26,9,7,7,12,10,31,17,0,0,
+0,10,10,20,7,2,3,23,1,6,27,4,4,1,32,0,
+22,18,28,16,12,14,9,23,26,11,30,21,3,1,15,5,
+0,19,14,4,5,7,8,22,2,22,19,21,16,29,17,0,
+0,0,21,29,25,25,23,11,18,20,8,2,32,14,0,0,
+0,0,0,5,32,20,15,27,25,8,18,14,9,0,0,0,
+0,0,0,4,19,21,25,2,6,25,21,19,24,0,0,0,
+0,0,0,0,31,18,25,21,31,9,25,8,0,0,0,0,
+0,0,0,0,0,0,6,3,14,8,0,0,0,0,0,0,
+0,0,0,0,0,0,0,13,21,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup name="Walls">
+  <properties>
+   <property name="tileset" value=""/>
+  </properties>
+  <object id="67" gid="34" x="160" y="208" width="128" height="128"/>
+  <object id="68" gid="34" x="128" y="224" width="128" height="128"/>
+  <object id="70" gid="34" x="64" y="256" width="128" height="128"/>
+  <object id="71" gid="34" x="32" y="272" width="128" height="128"/>
+  <object id="73" gid="46" x="0" y="288" width="128" height="128"/>
+  <object id="74" gid="34" x="352" y="112" width="128" height="128"/>
+  <object id="75" gid="34" x="416" y="80" width="128" height="128"/>
+  <object id="76" gid="34" x="320" y="128" width="128" height="128"/>
+  <object id="78" gid="34" x="448" y="64" width="128" height="128"/>
+  <object id="80" gid="47" x="480" y="48" width="128" height="128"/>
+  <object id="82" gid="49" x="480" y="528" width="128" height="128"/>
+  <object id="86" gid="43" x="288" y="144" width="128" height="128"/>
+  <object id="87" gid="35" x="256" y="128" width="128" height="128"/>
+  <object id="88" gid="42" x="192" y="192" width="128" height="128"/>
+  <object id="89" gid="37" x="160" y="176" width="128" height="128"/>
+  <object id="90" gid="35" x="512" y="64" width="128" height="128"/>
+  <object id="91" gid="35" x="544" y="80" width="128" height="128"/>
+  <object id="93" gid="35" x="608" y="112" width="128" height="128"/>
+  <object id="94" gid="35" x="640" y="128" width="128" height="128"/>
+  <object id="95" gid="43" x="672" y="144" width="128" height="128"/>
+  <object id="96" gid="34" x="704" y="128" width="128" height="128"/>
+  <object id="97" gid="35" x="800" y="208" width="128" height="128"/>
+  <object id="98" gid="35" x="832" y="224" width="128" height="128"/>
+  <object id="99" gid="44" x="768" y="192" width="128" height="128"/>
+  <object id="100" gid="36" x="800" y="176" width="128" height="128"/>
+  <object id="102" gid="35" x="896" y="256" width="128" height="128"/>
+  <object id="103" gid="35" x="928" y="272" width="128" height="128"/>
+  <object id="104" gid="48" x="960" y="288" width="128" height="128"/>
+  <object id="105" gid="36" x="928" y="304" width="128" height="128"/>
+  <object id="106" gid="36" x="896" y="320" width="128" height="128"/>
+  <object id="109" gid="36" x="864" y="336" width="128" height="128"/>
+  <object id="110" gid="36" x="832" y="352" width="128" height="128"/>
+  <object id="111" gid="36" x="800" y="368" width="128" height="128"/>
+  <object id="112" gid="44" x="768" y="384" width="128" height="128"/>
+  <object id="113" gid="35" x="800" y="400" width="128" height="128"/>
+  <object id="114" gid="37" x="32" y="304" width="128" height="128"/>
+  <object id="115" gid="37" x="64" y="320" width="128" height="128"/>
+  <object id="116" gid="37" x="96" y="336" width="128" height="128"/>
+  <object id="117" gid="37" x="128" y="352" width="128" height="128"/>
+  <object id="118" gid="37" x="160" y="368" width="128" height="128"/>
+  <object id="119" gid="37" x="320" y="448" width="128" height="128"/>
+  <object id="120" gid="37" x="352" y="464" width="128" height="128"/>
+  <object id="121" gid="37" x="384" y="480" width="128" height="128"/>
+  <object id="122" gid="37" x="416" y="496" width="128" height="128"/>
+  <object id="123" gid="37" x="448" y="512" width="128" height="128"/>
+  <object id="124" gid="42" x="192" y="384" width="128" height="128"/>
+  <object id="125" gid="45" x="288" y="432" width="128" height="128"/>
+  <object id="126" gid="36" x="256" y="448" width="128" height="128"/>
+  <object id="127" gid="38" x="160" y="400" width="128" height="128"/>
+  <object id="128" gid="36" x="512" y="512" width="128" height="128"/>
+  <object id="129" gid="36" x="544" y="496" width="128" height="128"/>
+  <object id="130" gid="36" x="576" y="480" width="128" height="128"/>
+  <object id="131" gid="36" x="608" y="464" width="128" height="128"/>
+  <object id="132" gid="36" x="640" y="448" width="128" height="128"/>
+  <object id="133" gid="45" x="672" y="432" width="128" height="128"/>
+  <object id="134" gid="37" x="704" y="448" width="128" height="128"/>
+  <object id="135" gid="43" x="480" y="304" width="128" height="128"/>
+  <object id="136" gid="44" x="448" y="288" width="128" height="128"/>
+  <object id="137" gid="45" x="480" y="272" width="128" height="128"/>
+  <object id="138" gid="42" x="512" y="288" width="128" height="128"/>
+  <object id="141" gid="58" x="384" y="96" width="128" height="128"/>
+  <object id="142" gid="58" x="96" y="240" width="128" height="128"/>
+  <object id="143" gid="59" x="576" y="96" width="128" height="128"/>
+  <object id="144" gid="59" x="864" y="240" width="128" height="128"/>
+ </objectgroup>
+ <objectgroup name="Collisions">
+  <object id="145" type="Collider" x="256" y="344">
+   <polygon points="0,0 -48,32 -240,-80 -192,-104"/>
+  </object>
+  <object id="146" type="Collider" x="528" y="496">
+   <polygon points="32,0 -32,40 -240,-80 -176,-112"/>
+  </object>
+  <object id="147" type="Collider" x="784" y="72">
+   <polygon points="16,16 -48,48 -240,-48 -176,-80"/>
+  </object>
+  <object id="148" type="Collider" x="1072" y="208">
+   <polygon points="0,16 -48,56 -240,-40 -176,-88"/>
+  </object>
+  <object id="150" type="Collider" x="544" y="488">
+   <polygon points="-16,8 208,-112 256,-72 32,48"/>
+  </object>
+  <object id="151" type="Collider" x="848" y="344">
+   <polygon points="-16,8 192,-112 256,-88 48,40"/>
+  </object>
+  <object id="152" type="Collider" x="272" y="160">
+   <polygon points="0,0 -224,112 -256,72 -48,-40"/>
+  </object>
+  <object id="153" type="Collider" x="544" y="24">
+   <polygon points="0,0 -192,88 -256,64 -32,-40"/>
+  </object>
+  <object id="154" type="Collider" x="512" y="256">
+   <polygon points="-16,0 32,24 80,0 32,-24"/>
+  </object>
+ </objectgroup>
+ <objectgroup name="Spawns"/>
+ <layer name="Navigation" width="16" height="16">
+  <properties>
+   <property name="tileset" value="navigationtile"/>
+  </properties>
+  <data encoding="csv">
+0,0,0,0,0,0,0,33,33,0,0,0,0,0,0,0,
+0,0,0,0,0,0,33,33,0,33,0,0,0,0,0,0,
+0,0,0,0,0,33,33,0,0,0,33,0,0,0,0,0,
+0,0,0,0,0,33,0,0,0,0,0,33,0,0,0,0,
+0,0,0,33,0,0,0,0,0,0,0,0,0,33,0,0,
+0,0,33,33,0,0,0,0,0,0,0,0,0,33,0,0,
+0,33,33,0,0,0,0,0,0,0,0,0,0,0,33,0,
+33,33,0,0,0,0,0,0,33,0,0,0,0,0,0,33,
+0,33,0,0,0,0,0,0,33,0,0,0,0,0,0,33,
+0,33,33,0,0,0,0,0,0,0,0,0,0,0,33,0,
+0,0,0,33,0,0,0,0,0,0,0,0,0,33,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,0,
+0,0,0,0,0,33,0,0,0,0,0,33,0,0,0,0,
+0,0,0,0,0,33,33,0,0,0,33,0,0,0,0,0,
+0,0,0,0,0,0,0,33,0,33,0,0,0,0,0,0,
+0,0,0,0,0,0,0,33,33,0,0,0,0,0,0,0
+</data>
+ </layer>
+</map>
