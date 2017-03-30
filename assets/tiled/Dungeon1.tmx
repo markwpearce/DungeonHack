@@ -797,7 +797,7 @@
    <polyline points="0,0 100,168 240,68 148,-48 4,4"/>
   </object>
  </objectgroup>
- <objectgroup name="Collisions" visible="0">
+ <objectgroup name="Collisions">
   <object id="508" type="Collider" x="784" y="1392">
    <properties>
     <property name="collide" type="bool" value="true"/>

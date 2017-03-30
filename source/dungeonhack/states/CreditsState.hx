@@ -7,6 +7,8 @@ import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 
+import openfl.Assets;
+
 import dungeonhack.util.*;
 
 typedef Credit = {
@@ -52,7 +54,7 @@ class CreditsState extends MenuState
     FlxTween.tween(bkgrndDimmer, { alpha: 0.5}, 1.0, {onComplete: startCredits, type: FlxTween.ONESHOT}); 
     nextLineY = FlxG.height;
 
-    credits = haxe.Json.parse(sys.io.File.getContent(AssetPaths.credits__json));		
+    credits = haxe.Json.parse(Assets.getText(AssetPaths.credits__json));		
     createLines();
   }
 
