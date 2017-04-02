@@ -17,7 +17,7 @@ class GameState extends PlayState
 	{
     super.create();
 
-    setLevelMap(AssetPaths.Dungeon1__tmx);
+    addLevelMap(AssetPaths.Dungeon1__tmx);
 		setPlayer(new Player());
 
 		enemiesByLevel = new Array< Array< String> > ();

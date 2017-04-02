@@ -60,11 +60,13 @@ class PlayState extends FlxUIState
    
 		levelCollisionSprite = new FlxNapeSprite(0, 0, null, false, true);
 		deadObjectsLayer = new FlxTypedGroup<FlxSprite>();
+
+    level = new TiledLevel();
   }
 
 
-  private function setLevelMap(mapPath: String): Void {
-    level = new TiledLevel(mapPath);
+  private function addLevelMap(mapPath: String, ?X:Int = 0, ?Y:Int=0): Void {
+    level.addTiledMap(mapPath, X, Y);
 		addCollisionMeshesToSpace();
 		playerSpawn = getPlayerStartingLocation();
     // Add backgrounds

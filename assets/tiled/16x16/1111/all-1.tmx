@@ -59,7 +59,7 @@
  </layer>
  <objectgroup name="Walls">
   <properties>
-   <property name="tileset" value=""/>
+   <property name="tileset" value="dungeon_walls"/>
   </properties>
   <object id="67" gid="34" x="160" y="208" width="128" height="128"/>
   <object id="68" gid="34" x="128" y="224" width="128" height="128"/>

@@ -67,7 +67,7 @@ class TiledLevel
 	// Sprites of images layers
 	public var imagesLayer:FlxGroup;
 	
-	public function new(tiledLevel:Dynamic)
+	public function new(?tiledLevel:Dynamic)
 	{
     tiledMaps = new Array<TiledMapWithOffset>();
     imagesLayer = new FlxGroup();
@@ -77,7 +77,9 @@ class TiledLevel
 		collisionMeshes = new Array<Shape>();
 		spawnMeshes = new Array<Shape>();
 		playerSpawns = new Array<Shape>();
-    addTiledMap(tiledLevel);
+    if(tiledLevel != null) {
+      addTiledMap(tiledLevel);
+    }
 	}
 
 
@@ -143,7 +145,13 @@ class TiledLevel
 					navigationMap = tilemap;
 				}
 				else {
-					throw "More than one navigation tile map found";
+
+          //TODO: INTEGRATE NAVIGATION MAPS
+          //for()
+        //  navigationMap.setTile()
+
+
+					//throw "More than one navigation tile map found";
 		
 				}
 			}
@@ -193,7 +201,7 @@ class TiledLevel
 		}
 		
 		if (tileSet == null)
-			throw "Tileset '" + tileSheetName + " not found. Did you misspell the 'tilesheet' property in " + tileLayer.name + "' layer?";
+			throw "Tileset '" + tileSheetName + " not found. Did you misspell the 'tileset' property in " + tileLayer.name + "' layer?";
 			
 		return tileSet;
 	}

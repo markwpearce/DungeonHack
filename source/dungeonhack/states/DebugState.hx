@@ -23,7 +23,7 @@ class DebugState extends PlayState
     super.create();
     bgColor = FlxColor.GRAY;
     FlxNapeSpace.drawDebug = true;
-    setLevelMap(AssetPaths.DebugLevel__tmx);
+    addLevelMap(AssetPaths.DebugLevel__tmx);
 		setPlayer(new Player());
     FlxG.sound.music.stop();
     FlxG.debugger.visible = true;
@@ -49,12 +49,19 @@ class DebugState extends PlayState
     lastEnemyType = enemyType;
   } 
 
+  private function addMap():Void {
+    level.addTiledMap(AssetPaths.all_1__tmx, (24*64), 0);
+  }
+
 
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
     if(CheckInput.check([E])) {
       addEnemyType(lastEnemyType);
+    }
+    if(CheckInput.check([M])) {
+      addMap();
     }
     
 	}
