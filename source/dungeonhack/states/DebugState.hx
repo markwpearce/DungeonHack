@@ -9,6 +9,7 @@ import flixel.addons.ui.*;
 
 import dungeonhack.characters.*;
 import dungeonhack.ui.*;
+import dungeonhack.maps.RoomPlacer;
 import dungeonhack.util.*;
 import dungeonhack.characters.Enemies;
 
@@ -23,6 +24,8 @@ class DebugState extends PlayState
     super.create();
     bgColor = FlxColor.GRAY;
     FlxNapeSpace.drawDebug = true;
+
+    roomPlacer = new RoomPlacer((20*64),(-32*5));
     addLevelMap(AssetPaths.DebugLevel__tmx);
 		setPlayer(new Player());
     FlxG.sound.music.stop();
@@ -49,10 +52,14 @@ class DebugState extends PlayState
     lastEnemyType = enemyType;
   } 
 
-  private function addMap():Void {
-    level.addTiledMap(AssetPaths.all_1__tmx, (24*64), 0);
+  private function addMap(?roomX: Int=0, ?roomY:Int = 0):Void {
+    addLevelMap(AssetPaths.all_1__tmx,
+      roomPlacer.roomXYToPixelX(roomX, roomY),
+      roomPlacer.roomXYToPixelY(roomX, roomY)
+      );
   }
 
+  
 
 	override public function update(elapsed:Float):Void
 	{

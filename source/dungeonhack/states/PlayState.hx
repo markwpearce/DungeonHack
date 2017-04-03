@@ -25,7 +25,7 @@ import dungeonhack.characters.*;
 import dungeonhack.ui.*;
 import dungeonhack.sound.*;
 import dungeonhack.util.*;
-import dungeonhack.maps.TiledLevel;
+import dungeonhack.maps.*;
 
 class PlayState extends FlxUIState
 {
@@ -38,7 +38,10 @@ class PlayState extends FlxUIState
 	private var entities: FlxGroup;
 
 
-	private var  levelCollisionSprite:FlxNapeSprite;
+	private var levelCollisionSprite:FlxNapeSprite;
+  private var levelCollisions:Body;// = new Body(BodyType.STATIC);
+  private var levelSpawns:Body; //= new Body(BodyType.STATIC);
+  private var levelCollisionMaterial:Material;
 
 	public var deadObjectsLayer: FlxTypedGroup<FlxSprite>;
 
@@ -46,6 +49,8 @@ class PlayState extends FlxUIState
 	public var enemySpawn: Array<FlxPoint>;
 
   private var random: FlxRandom;
+
+  private var roomPlacer: RoomPlacer;
 
   override public function create():Void
 	{
@@ -59,15 +64,19 @@ class PlayState extends FlxUIState
 		FlxNapeSpace.space.gravity = new Vec2(0, 0);
    
 		levelCollisionSprite = new FlxNapeSprite(0, 0, null, false, true);
-		deadObjectsLayer = new FlxTypedGroup<FlxSprite>();
+    levelSpawns = new Body(BodyType.STATIC);
+    levelCollisions = new Body(BodyType.STATIC);
+    levelCollisionMaterial = new Material(0.4, 0.2, 0.38, 0.7);
+
+    deadObjectsLayer = new FlxTypedGroup<FlxSprite>();
 
     level = new TiledLevel();
+    roomPlacer = new RoomPlacer();
   }
-
 
   private function addLevelMap(mapPath: String, ?X:Int = 0, ?Y:Int=0): Void {
     level.addTiledMap(mapPath, X, Y);
-		addCollisionMeshesToSpace();
+		setCollisionMeshesToSpace();
 		playerSpawn = getPlayerStartingLocation();
     // Add backgrounds
 		add(level.backgroundLayer);
@@ -119,23 +128,35 @@ class PlayState extends FlxUIState
 		add(screenUi);
   }
 
-	private function addCollisionMeshesToSpace():Void {
-		var levelCollisions = new Body(BodyType.STATIC);
-		var levelSpawns = new Body(BodyType.STATIC);
+	private function setCollisionMeshesToSpace():Void {
+    trace("setting collisions - "+level.collisionMeshes.length);
+
+    
+    levelCollisions.space = null;
+    levelSpawns.space = null;
+		
 		
 		for(shape in level.collisionMeshes) {
-			shape.body = levelCollisions;
+			if(shape.body == null) {
+        shape.body = levelCollisions;
+        shape.material = levelCollisionMaterial;
+      }
 		}
 		for(shape in level.playerSpawns) {
-			shape.body = levelSpawns;
+			if(shape.body == null) {
+        shape.body = levelSpawns;
+        shape.material = levelCollisionMaterial;
+      }
 		}
 		for(shape in level.spawnMeshes) {
-			shape.body = levelSpawns;
-	
+			if(shape.body == null) {
+        shape.body = levelSpawns;
+      }
 		}
-		levelCollisions.setShapeMaterials(new Material(0.4, 0.2, 0.38, 0.7)); // these values from FlxNapeSpace createWalls
-		levelCollisions.space = FlxNapeSpace.space;
+
+    levelCollisions.space = FlxNapeSpace.space;
 		levelCollisionSprite.addPremadeBody(levelCollisions);
+    
 	}
 
   private function addEnemy(enemy:Enemy, ?enemyStartLocation:FlxPoint) {

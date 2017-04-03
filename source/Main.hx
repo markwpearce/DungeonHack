@@ -2,7 +2,8 @@ package;
 
 import flixel.FlxGame;
 import openfl.display.Sprite;
-import dungeonhack.states.TitleState;
+import dungeonhack.states.TitleState
+;
 
 
 class Main extends Sprite

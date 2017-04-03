@@ -96,7 +96,10 @@ class TiledLevel
 			
 			if (layer.type != TiledLayerType.TILE) continue;
 			var tileLayer:TiledTileLayer = cast layer;
-			
+      
+      tileLayer.offsetX+= map.x;
+      tileLayer.offsetY+= map.y;
+      
 			var tileSet = getTileSetFromLayer(map, tileLayer);
 			var processedPath = getImagePathFromTileSet(tileSet);
 			
@@ -108,9 +111,8 @@ class TiledLevel
       trace("Tile Layer: "+tileLayer.name+ " type: "+tileLayer.type+" Path: "+processedPath);
 			tilemap.loadMapFromArray(tileLayer.tileArray, map.width, map.height, processedPath,
 				tileSet.tileWidth, tileSet.tileHeight, OFF,
-				 tileSet.firstGID, 1, 1);
-			var count = tilemap.totalTiles;
-			
+				 tileSet.firstGID, tiledMaps.length+1, 1);
+     	
 			/* Animated tiles?
 			if (tileLayer.properties.contains("animated"))
 			{
@@ -225,9 +227,8 @@ class TiledLevel
 		return special;
 	}
 	
-	public function loadObjects(map: TiledMap)
+	public function loadObjects(map: TiledMapWithOffset)
 	{
-		var layer:TiledObjectLayer;
 		for (layer in map.layers)
 		{
 			trace("Layer: "+layer.name+ " type: "+layer.type);
@@ -243,9 +244,12 @@ class TiledLevel
 				{
 					if(o.objectType == TiledObject.RECTANGLE || o.objectType == TiledObject.POLYGON || o.objectType == TiledObject.ELLIPSE)  {
 						//deal with collision mesh
-						if(o.properties.contains("collide")|| o.type.toLowerCase() == "collider") createCollisionShape(o, collisionMeshes);
-						else if((o.properties.contains("spawn") && o.properties.get("spawn") != "player") || o.type.toLowerCase() == "enemyspawn") createCollisionShape(o, spawnMeshes);
-						else if((o.properties.contains("spawn") && o.properties.get("spawn") == "player") || o.type.toLowerCase() == "playerspawn") createCollisionShape(o, playerSpawns);
+						if(o.properties.contains("collide")||
+              o.type.toLowerCase() == "collider") createCollisionShape(map, o, collisionMeshes);
+						else if((o.properties.contains("spawn") && o.properties.get("spawn") != "player") ||
+              o.type.toLowerCase() == "enemyspawn") createCollisionShape(map, o, spawnMeshes);
+						else if((o.properties.contains("spawn") && o.properties.get("spawn") == "player") ||
+              o.type.toLowerCase() == "playerspawn") createCollisionShape(map, o, playerSpawns);
 					}
 					else if(o.objectType == TiledObject.TILE) {
 					  //load it as a tile based scenery
@@ -257,15 +261,15 @@ class TiledLevel
 		}
 	}
 
-	private function objectPointsToVec2List(object: TiledObject):Vec2List {
+	private function objectPointsToVec2List(object: TiledObject, ?xOffset:Int=0, ?yOffset:Int=0):Vec2List {
 		var list = new Vec2List();
 		for(point in object.points) {
-			list.push(new Vec2(object.x+point.x, object.y+point.y));
+			list.push(new Vec2(xOffset+object.x+point.x, yOffset+object.y+point.y));
 		}
 		return list;
 	}
 
-	private function createCollisionShape(object:TiledObject, meshes:Array<Shape> ) {
+	private function createCollisionShape(map: TiledMapWithOffset, object:TiledObject, meshes:Array<Shape> ) {
 		
 		switch( object.objectType){
 		
@@ -281,7 +285,7 @@ class TiledLevel
 				}
 
 				trace("Polygon: "+pointsStr);
-				var napeShape = new Polygon(objectPointsToVec2List(object));
+				var napeShape = new Polygon(objectPointsToVec2List(object, map.x, map.y));
 				meshes.push(napeShape);
 			
 			case TiledObject.RECTANGLE:
@@ -290,18 +294,18 @@ class TiledLevel
 				var y = Math.max(object.y, 0);
 				trace("Rect: "+x+" "+y+" "+object.width+" "+object.height);
 
-				var napeShape = new Polygon(Polygon.rect(x, y, object.width, object.height, false));
+				var napeShape = new Polygon(Polygon.rect(map.x+x, map.y+y, object.width, object.height, false));
 				meshes.push(napeShape);
 	
 			case TiledObject.ELLIPSE:
-				var napeShape = new Circle((object.height+object.width)/4, new Vec2(object.x+(object.width)/2, object.y+object.height/2));
+				var napeShape = new Circle((object.height+object.width)/4, new Vec2(map.x+object.x+(object.width)/2, map.y+object.y+object.height/2));
 				meshes.push(napeShape);
 		}
 		trace(meshes.length);
 	}
 
 	
-	private function loadImageObject(map: TiledMap, object:TiledObject)
+	private function loadImageObject(map: TiledMapWithOffset, object:TiledObject)
 	{
 		
 		var tilesImageCollection:TiledTileSet = map.getTileSet("imageCollection");
@@ -310,7 +314,6 @@ class TiledLevel
 		
 		
 		//decorative sprites
-		var levelsDir:String = "assets/tiled/";
 		
 		var decoSprite:FlxSprite = new FlxSprite(0, 0, processedPath);
 		if (decoSprite.width != object.width ||
@@ -319,7 +322,7 @@ class TiledLevel
 			decoSprite.antialiasing = true;
 			decoSprite.setGraphicSize(object.width, object.height);
 		}
-		decoSprite.setPosition(object.x, object.y - decoSprite.height);
+		decoSprite.setPosition(map.x+object.x, map.y+object.y - decoSprite.height);
 		decoSprite.origin.set(decoSprite.width/2, decoSprite.height);
 		if (object.angle != 0)
 		{
@@ -337,7 +340,7 @@ class TiledLevel
 		backgroundLayer.add(decoSprite);
 	}
 	
-	private function loadObject(map: TiledMap, object:TiledObject, g:TiledObjectLayer, group:FlxTypedGroup<FlxSprite>)
+	private function loadObject(map: TiledMapWithOffset, object:TiledObject, g:TiledObjectLayer, group:FlxTypedGroup<FlxSprite>)
 	{
 		var tileset:TiledTileSet = getTileSetFromLayer(map, g);
 		var tileIndex = object.gid-tileset.firstGID;
@@ -355,7 +358,7 @@ class TiledLevel
 			decoSprite.antialiasing = true;
 			decoSprite.setGraphicSize(object.width, object.height);
 		}
-		decoSprite.setPosition(object.x, object.y - decoSprite.height);
+		decoSprite.setPosition(map.x+object.x, map.y+object.y - decoSprite.height);
 		//decoSprite.origin.set(decoSprite.width/2, decoSprite.height);
 		if (object.angle != 0)
 		{
@@ -410,7 +413,7 @@ class TiledLevel
 		}*/
 	}
 
-	public function loadImages(map:TiledMap)
+	public function loadImages(map:TiledMapWithOffset)
 	{
 		for (layer in map.layers)
 		{
@@ -418,7 +421,7 @@ class TiledLevel
 				continue;
 
 			var image:TiledImageLayer = cast layer;
-			var sprite = new FlxSprite(image.x, image.y, c_PATH_LEVEL_TILESHEETS + image.imagePath);
+			var sprite = new FlxSprite(map.x+image.x, map.y+image.y, c_PATH_LEVEL_TILESHEETS + image.imagePath);
 			imagesLayer.add(sprite);
 		}
 	}
