@@ -129,8 +129,7 @@ class PlayState extends FlxUIState
   }
 
 	private function setCollisionMeshesToSpace():Void {
-    trace("setting collisions - "+level.collisionMeshes.length);
-
+    trace("Setting collisions - Total collsion meshes: "+level.collisionMeshes.length);
     
     levelCollisions.space = null;
     levelSpawns.space = null;
