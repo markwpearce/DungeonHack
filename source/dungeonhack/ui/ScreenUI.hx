@@ -34,11 +34,11 @@ class ScreenUI extends FlxTypedGroup<FlxSprite> {
 
   private function getScreenX():Float{
      var cam = FlxG.camera;
-     return cam.scroll.x+(FlxG.camera.width)/6 ;//+ 64/1.5;
+     return cam.scroll.x+(FlxG.camera.width)/6;
   }
   private function getScreenY():Float{
      var cam = FlxG.camera;
-     return cam.scroll.y+ (FlxG.camera.height)/6;// + 64/1.5;
+     return cam.scroll.y+ (FlxG.camera.height)/6;
   }
 
   private function setupUI() {

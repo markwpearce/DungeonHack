@@ -2,7 +2,6 @@ package dungeonhack.states;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxState;
 import flixel.FlxCamera.FlxCameraFollowStyle;
 import flixel.group.FlxGroup;
 import flixel.input.gamepad.FlxGamepadInputID;
@@ -71,20 +70,24 @@ class PlayState extends FlxUIState
     deadObjectsLayer = new FlxTypedGroup<FlxSprite>();
 
     level = new TiledLevel();
-    roomPlacer = new RoomPlacer();
-  }
 
-  private function addLevelMap(mapPath: String, ?X:Int = 0, ?Y:Int=0): Void {
-    level.addTiledMap(mapPath, X, Y);
-		setCollisionMeshesToSpace();
-		playerSpawn = getPlayerStartingLocation();
-    // Add backgrounds
+     // Add backgrounds
 		add(level.backgroundLayer);
 		
 		// Add static images
     //	add(level.imagesLayer);
 		add(deadObjectsLayer);
 		add(level.objectsLayer);
+    roomPlacer = new RoomPlacer();
+  }
+
+  private function addLevelMap(mapPath: String, ?X:Int = 0, ?Y:Int=0): Void {
+    trace('Adding ${mapPath} at $X,$Y');
+    
+    level.addTiledMap(mapPath, X, Y);
+		setCollisionMeshesToSpace();
+		playerSpawn = getPlayerStartingLocation();
+   
   }
   
 

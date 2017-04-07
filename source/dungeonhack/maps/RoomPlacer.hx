@@ -26,13 +26,15 @@ class RoomPlacer {
   }
 
   public function roomXYToPixelX(roomX:Int, roomY:Int):Int {
+   var roomWidthInPixels = (roomWidthInTiles+1)*tileWidth;
    return Math.floor(startOffsetX + 
-    (roomX + roomY) * roomWidthInTiles*tileWidth/2);
+     (roomX + roomY) * roomWidthInPixels/2);
   }
 
   public function roomXYToPixelY(roomX:Int, roomY:Int):Int {
+    var roomHeightInPixels = (roomHeightInTiles+1)*tileHeight;
     return Math.floor(startOffsetY - 
-      (roomY - roomX) *roomHeightInTiles*tileHeight/2);
+      (roomY - roomX) *roomHeightInPixels/2);
   }
 
 }

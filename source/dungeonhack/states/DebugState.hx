@@ -16,16 +16,18 @@ import dungeonhack.characters.Enemies;
 class DebugState extends PlayState
 {
 
-  private var enemySelector: FlxUIDropDownMenu;
   private var lastEnemyType:String = "Orc";
 
+  private var mapPlacementX: FlxUINumericStepper;
+  private var mapPlacementY: FlxUINumericStepper;
+  
 	override public function create():Void
 	{
     super.create();
     bgColor = FlxColor.GRAY;
     FlxNapeSpace.drawDebug = true;
 
-    roomPlacer = new RoomPlacer((20*64),(-32*5));
+    roomPlacer = new RoomPlacer((20*64),(32*-6));
     addLevelMap(AssetPaths.DebugLevel__tmx);
 		setPlayer(new Player());
     FlxG.sound.music.stop();
@@ -39,17 +41,27 @@ class DebugState extends PlayState
 
 
   private function addDebugUi():Void {
+    mapPlacementX = new FlxUINumericStepper(5, 60, 1, 0, 0, 10);
+    mapPlacementY= new FlxUINumericStepper(5, 80, 1, 0, 0, 10);
+    screenUi.addFixedSprite(mapPlacementX);
+    screenUi.addFixedSprite(mapPlacementY);
+    screenUi.addFixedSprite(new FlxUIButton(5, 100, "Add Map Tile", addMapTile));
     var enemyLabels = new Array<StrNameLabel>();
     for(enemyType in Enemies.ENEMY_TYPE_LIST) {
       enemyLabels.push(new StrNameLabel(enemyType, enemyType));
     }
-    enemySelector = new FlxUIDropDownMenu(5, 30, enemyLabels, addEnemyType);
+    var enemySelector = new FlxUIDropDownMenu(5, 30, enemyLabels, addEnemyType);
     screenUi.addFixedSprite(enemySelector);
+
   } 
 
   private function addEnemyType(enemyType: String):Void {
     addEnemy(Enemies.createEnemyByType(enemyType));
     lastEnemyType = enemyType;
+  } 
+
+  private function addMapTile():Void {
+    addMap(Math.round(mapPlacementX.value), Math.round(mapPlacementY.value));
   } 
 
   private function addMap(?roomX: Int=0, ?roomY:Int = 0):Void {
@@ -68,7 +80,7 @@ class DebugState extends PlayState
       addEnemyType(lastEnemyType);
     }
     if(CheckInput.check([M])) {
-      addMap();
+      addMapTile();
     }
     
 	}

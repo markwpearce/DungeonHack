@@ -97,8 +97,8 @@ class TiledLevel
 			if (layer.type != TiledLayerType.TILE) continue;
 			var tileLayer:TiledTileLayer = cast layer;
       
-      tileLayer.offsetX+= map.x;
-      tileLayer.offsetY+= map.y;
+      tileLayer.offsetX += map.x;
+      tileLayer.offsetY += map.y;
       
 			var tileSet = getTileSetFromLayer(map, tileLayer);
 			var processedPath = getImagePathFromTileSet(tileSet);
@@ -108,12 +108,35 @@ class TiledLevel
 		
 			tilemap.offset.x = -tileLayer.offsetX;
 			tilemap.offset.y = -tileLayer.offsetY;
-      trace("Tile Layer: "+tileLayer.name+ " type: "+tileLayer.type+" Path: "+processedPath);
+      trace("Tile Layer: "+tileLayer.name+ " type: "+tileLayer.type+" Path: "+processedPath+" FirstGID: "+tileSet.firstGID);
 			tilemap.loadMapFromArray(tileLayer.tileArray, map.width, map.height, processedPath,
 				tileSet.tileWidth, tileSet.tileHeight, OFF,
-				 tileSet.firstGID, tiledMaps.length+1, 1);
-     	
-			/* Animated tiles?
+				 tileSet.firstGID,
+          1, 1);
+     	trace("Tilemap size: "+tilemap.totalTiles);
+			for(i in 0...15) {
+        trace(tilemap.getTileByIndex(16*i) +", "+ 
+          tilemap.getTileByIndex(16*i+1) +", "+
+          tilemap.getTileByIndex(16*i+2) +", "+
+          tilemap.getTileByIndex(16*i+3) +", "+
+          tilemap.getTileByIndex(16*i+4) +", "+
+          tilemap.getTileByIndex(16*i+5) +", "+
+          tilemap.getTileByIndex(16*i+6) +", "+
+          tilemap.getTileByIndex(16*i+7) +", "+
+          tilemap.getTileByIndex(16*i+8) +", "+
+          tilemap.getTileByIndex(16*i+9) +", "+
+          tilemap.getTileByIndex(16*i+10) +", "+
+          tilemap.getTileByIndex(16*i+11) +", "+
+          tilemap.getTileByIndex(16*i+12) +", "+
+          tilemap.getTileByIndex(16*i+13) +", "+
+          tilemap.getTileByIndex(16*i+14) +", "+
+          tilemap.getTileByIndex(16*i+15));
+
+      }
+      
+      
+      
+      /* Animated tiles?
 			if (tileLayer.properties.contains("animated"))
 			{
 				var tileset = tilesets["level"];
@@ -143,10 +166,10 @@ class TiledLevel
 			else if(tileLayer.name == "Navigation")
 			{
 				trace("Found navigation layer");
-				if(navigationMap == null) {
+			//	if(navigationMap == null) {
 					navigationMap = tilemap;
-				}
-				else {
+				//}
+				//else {
 
           //TODO: INTEGRATE NAVIGATION MAPS
           //for()
@@ -155,7 +178,7 @@ class TiledLevel
 
 					//throw "More than one navigation tile map found";
 		
-				}
+				//}
 			}
 		}
 
