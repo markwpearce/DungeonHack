@@ -92,7 +92,7 @@ class PlayState extends FlxUIState
   
 
 	private function getPlayerStartingLocation():FlxPoint {
-		var start = new FlxPoint(500, 500);
+		var start = new FlxPoint(0 ,0);
 
 		if(level.playerSpawns.length > 0) {
 			start = randomPointInBounds(level.playerSpawns[random.int(0,level.playerSpawns.length-1)].bounds);
@@ -122,7 +122,8 @@ class PlayState extends FlxUIState
       throw "Must load level before setting player";
     }
     player = thePlayer;
-		player.setPosition(playerSpawn.x,playerSpawn.y);
+    var start = (playerSpawn != null) ? playerSpawn :  getPlayerStartingLocation();
+    player.setPosition(start.x,start.y);
 		level.objectsLayer.add(player);
     SoundGlobal.soundListener = player;
     	// Add foreground tiles after adding level objects, so these tiles render on top of player
