@@ -4,6 +4,8 @@ package dungeonhack.characters;
 class FSM
  {
      public var activeState:Float->Void;
+     public var activeStateName:String;
+     
 
      public function new(?InitState:Float->Void):Void
      {
@@ -15,4 +17,11 @@ class FSM
          if (activeState != null)
              activeState(elapsed);
      }
+
+     public function setState(nextState:Float->Void):Void {
+       activeState = nextState;
+       activeStateName = '${nextState}';
+     }
+
+
  }

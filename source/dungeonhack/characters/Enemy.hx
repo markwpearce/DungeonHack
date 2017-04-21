@@ -13,6 +13,7 @@ class Enemy extends Character
   private var lastKnownTargetPosition: FlxPoint;
   private var secondsSinceLastSawTarget: Float;
   private var ai:FSM;
+  private var activeStateName:String;
  
  
   public function new(?X:Float=0, ?Y:Float=0,?characterSpriteSheet:FlxGraphicAsset, mHealth: Int =20, eSpeed: Int = 100)
@@ -28,13 +29,17 @@ class Enemy extends Character
       }
   }
 
+  private function setState(stateFunc:Float->Void):Void {
+    ai.setState(stateFunc);
+    activeStateName = ai.activeStateName;  
+  }
 
 
   private function idleState(elapsed:Float): Void {
     if(target.alive) {
       var losResult = seesTargetSprite(target, meleeStats.distance/2);
       if(losResult != LineOfSiteResult.NO_LOS) {
-        ai.activeState = chaseState;
+        setState(chaseState);
         secondsSinceLastSawTarget = 0;
       }
     }
@@ -44,7 +49,7 @@ class Enemy extends Character
 
   private function chaseState(elapsed:Float):Void {
     if(!target.alive) {
-      ai.activeState = idleState;  
+      setState(idleState);  
       characterMove(elapsed);
       return;
     }
@@ -52,7 +57,7 @@ class Enemy extends Character
     
     switch(losResult) {
       case LineOfSiteResult.CLOSE: {
-        ai.activeState = meleeState;
+        setState(meleeState);
         secondsSinceLastSawTarget = 0;
       }
       case LineOfSiteResult.SEES :{
@@ -60,7 +65,7 @@ class Enemy extends Character
       }
       case LineOfSiteResult.NO_LOS: {
         if(secondsSinceLastSawTarget > 3) {
-          ai.activeState = idleState; 
+          setState(idleState); 
         }
       }
     }
@@ -74,12 +79,15 @@ class Enemy extends Character
       this.characterMelee();
     }
     else {
-      ai.activeState = chaseState;  
+      setState(chaseState);  
     }
     secondsSinceLastSawTarget = 0;
     characterMove(elapsed, goToTarget());
   }
 
+
+  private function deadState(elapsed:Float):Void {
+  }
 
   
 
@@ -110,5 +118,10 @@ class Enemy extends Character
      ai.update(elapsed);
      super.update(elapsed);
      secondsSinceLastSawTarget+= elapsed;
+  }
+
+  override public function onDied() {
+    super.onDied();
+    setState(deadState);
   }
 }

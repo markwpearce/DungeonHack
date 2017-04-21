@@ -3,6 +3,7 @@ package dungeonhack.debug;
 import flixel.system.debug.FlxDebugger;
 import openfl.text.TextField;
 
+import dungeonhack.maps.RoomDiscovery;
 
 class MapDebugWindow extends DebugWindow {
 
@@ -11,17 +12,13 @@ class MapDebugWindow extends DebugWindow {
 
   private var mapPlacementDescription: TextField;
 
-  private var addMapCallback:Null<Void -> Void>;
-    
-  private var initd:Bool = false;
-
-  public function new(addMapFunc:Null<Void -> Void>) {
+  public function new(addMapFunc:Null<Void -> Void>, setRoomFunc:Null<String -> Void>) {
     super("Map Debug");
     addMapCoordWatch("X");
     addMapCoordWatch("Y");
       
-    addMapCallback = addMapFunc;
-    mapPlacementDescription = addLabeledButton("Add map", addMapCallback, new GraphicInteractive(0, 0)).label;    
+    addLabeledSelect("Map Room file", RoomDiscovery.getAllRooms(), setRoomFunc);
+    mapPlacementDescription = addLabeledButton("Add map", addMapFunc, new GraphicInteractive(0, 0)).label;    
   }
 
 
@@ -36,6 +33,7 @@ class MapDebugWindow extends DebugWindow {
 
   public function incXY() {
     if(mapX >= mapY) {
+      mapX=0;
       mapY++;
     }
     else {
