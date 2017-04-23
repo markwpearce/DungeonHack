@@ -29,10 +29,13 @@ class RoomDiscovery {
     for(type in types) {
       trace(BASE_DIR+type);
       try {
-        roomPathsBytype[type] = FileSystem.readDirectory(BASE_DIR+type).filter(function(path:String):Bool {
-        trace(path);
-        return path.indexOf(".tmx") != -1;
-      });
+        roomPathsBytype[type] = FileSystem.readDirectory(BASE_DIR+type)
+          .filter(function(path:String):Bool {
+            trace(path);
+            return path.indexOf(".tmx") != -1;
+          }).map(function(fileName) {
+            return BASE_DIR+type+"/"+fileName;
+          });
       allRoomPaths = allRoomPaths.concat(roomPathsBytype[type]);
       }
       catch(except:Dynamic) {
@@ -49,6 +52,19 @@ class RoomDiscovery {
     init();
     return allRoomPaths.copy();
   }
+
+  public static function getAllRoomNames():Array<String> {
+    return getAllRooms().map(function(path) {
+      return path.substr(path.lastIndexOf("/")+1);
+    });
+  };
+
+  public static function roomNameToPath(roomFileName:String):String {
+    init();
+    return allRoomPaths.filter(function(path) {
+      return (path.indexOf(roomFileName) != -1);
+    })[0];
+  };
 
   public static function entrancesToType(north:Bool, east:Bool, south:Bool, west:Bool): String {
     return '${north?1:0}${east?1:0}${south?1:0}${west?1:0}';

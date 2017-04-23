@@ -22,7 +22,9 @@ class TitleState extends MenuState
  		super.create();
 		addButton("Play", clickPlay);
 		addButton("Credits", clickCredits);
+    #if DEBUG
     addButton("Debug Level", clickDebug);
+    #end 
     addButton("Quit", clickQuit);
 
     setActiveButtonIndex(0);
@@ -63,9 +65,11 @@ class TitleState extends MenuState
     else if(CheckInput.check([UP], [FlxGamepadInputID.DPAD_UP])) {
 			setActiveButtonIndex(activeButtonIndex-1);
 		}
+    #if debug
     else if(CheckInput.check([D])) {
 			clickDebug();
 		}
+    #end
     else if(CheckInput.check([P])) {
 			clickPlay();
 		}

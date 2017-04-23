@@ -1,3 +1,5 @@
+
+
 package dungeonhack.debug;
 
 import flixel.system.debug.DebuggerUtil;
@@ -75,7 +77,7 @@ class DebugLabeledSelect {
 
   }
 }
-
+#if DEBUG
 class DebugWindow extends Watch {
 
   private static inline var LINE_HEIGHT:Int = 16;
@@ -237,5 +239,27 @@ class DebugWindow extends Watch {
       drawButton(labeledButton.button);
     }
   }
-
 }
+#end
+#if !DEBUG
+class DebugWindow {
+
+  public function new(titleText:String) {  }
+
+  public function addLabeledButton(textLabel:String,
+            onClick:Null<Void -> Void>,
+            ?icon:flash.display.BitmapData): DebugLabledButton {
+    return null;
+  }
+
+  public function addLabeledSelect(textLabel:String, selectionItems: Array<String>,onSelect:String -> Void):DebugLabeledSelect {
+    return null;
+  }
+
+  public function addWatch(thisObj:Dynamic, name:String, prop:String):Void {  }
+
+  public function resize(x:Int, y:Int):Void { }
+  public function close():Void { }
+  public function update():Void { }
+}
+#end

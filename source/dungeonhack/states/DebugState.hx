@@ -43,7 +43,7 @@ class DebugState extends PlayState
     roomPlacer = new RoomPlacer((20*64),(32*-6));
     addLevelMap(AssetPaths.DebugLevel__tmx);
 		setPlayer(new Player());
-     FlxG.debugger.addTrackerProfile(new TrackerProfile(Character, [
+    FlxG.debugger.addTrackerProfile(new TrackerProfile(Character, [
         "name",
         "type",
         "health",
@@ -59,21 +59,17 @@ class DebugState extends PlayState
         "exp",
         "nextLevel"
     ], [Character]));
-    playerTrackerWindow = FlxG.debugger.track(player);
-    mapDebugWindow = new MapDebugWindow(addMapRoom, setMapRoom);
-    FlxG.game.debugger.addWindow(mapDebugWindow);
-    enemyDebugWindow = new EnemyDebugWindow(addLastEnemy);
-    FlxG.game.debugger.addWindow(enemyDebugWindow);
-
+    
     addDebugUi();
 	}
 
 
   private function addDebugUi():Void {
-   
-   
-    //var enemySelector = new FlxUIDropDownMenu(5, 30, enemyLabels, addEnemyType);
-    //screenUi.addFixedSprite(enemySelector);
+    playerTrackerWindow = FlxG.debugger.track(player);
+    mapDebugWindow = new MapDebugWindow(addMapRoom, setMapRoom);
+    //FlxG.game.debugger.addWindow(mapDebugWindow);
+    enemyDebugWindow = new EnemyDebugWindow(addLastEnemy);
+    //FlxG.game.debugger.addWindow(enemyDebugWindow);
   } 
 
   private function addLastEnemy():Void {
@@ -97,10 +93,14 @@ class DebugState extends PlayState
   }
 
   private function setMapRoom(mapRoomPath:String) {
+    trace('Setting map ${mapRoomPath}');
+    
     mapToAddPath = mapRoomPath;
   }
 
   private function addMap(?roomX: Int=0, ?roomY:Int = 0, mapPath:String):Void {
+    trace('Adding map ${mapPath}');
+    
     addLevelMap(mapPath,
       roomPlacer.roomXYToPixelX(roomX, roomY),
       roomPlacer.roomXYToPixelY(roomX, roomY)

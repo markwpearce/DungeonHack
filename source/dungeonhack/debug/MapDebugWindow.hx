@@ -11,13 +11,14 @@ class MapDebugWindow extends DebugWindow {
   public var mapY:Int = 0;
 
   private var mapPlacementDescription: TextField;
+  private var setRoomCallback: Null<String -> Void>;
 
   public function new(addMapFunc:Null<Void -> Void>, setRoomFunc:Null<String -> Void>) {
     super("Map Debug");
     addMapCoordWatch("X");
     addMapCoordWatch("Y");
-      
-    addLabeledSelect("Map Room file", RoomDiscovery.getAllRooms(), setRoomFunc);
+    setRoomCallback = setRoomFunc;
+    addLabeledSelect("Map Room file", RoomDiscovery.getAllRoomNames(), setRoomWrapper);
     mapPlacementDescription = addLabeledButton("Add map", addMapFunc, new GraphicInteractive(0, 0)).label;    
   }
 
@@ -28,7 +29,9 @@ class MapDebugWindow extends DebugWindow {
   }
 
   override public function update():Void {
-    mapPlacementDescription.text = 'Add map room at (${mapX},${mapY})';   
+    if(mapPlacementDescription != null) {
+      mapPlacementDescription.text = 'Add map room at (${mapX},${mapY})';   
+    }
   }
 
   public function incXY() {
@@ -39,5 +42,9 @@ class MapDebugWindow extends DebugWindow {
     else {
       mapX++;
     }
+  }
+
+  public function setRoomWrapper(roomName: String):Void {
+    setRoomCallback(RoomDiscovery.roomNameToPath(roomName));
   }
 }
