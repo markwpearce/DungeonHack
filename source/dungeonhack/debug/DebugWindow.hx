@@ -77,7 +77,7 @@ class DebugLabeledSelect {
 
   }
 }
-#if DEBUG
+#if debug
 class DebugWindow extends Watch {
 
   private static inline var LINE_HEIGHT:Int = 16;
