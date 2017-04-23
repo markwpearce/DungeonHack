@@ -22,7 +22,7 @@ class TitleState extends MenuState
  		super.create();
 		addButton("Play", clickPlay);
 		addButton("Credits", clickCredits);
-    #if DEBUG
+    #if debug
     addButton("Debug Level", clickDebug);
     #end 
     addButton("Quit", clickQuit);
