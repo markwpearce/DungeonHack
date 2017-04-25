@@ -34,8 +34,8 @@ class DebugState extends PlayState
     FlxNapeSpace.drawDebug = true;
     FlxG.sound.music.stop();
     FlxG.debugger.visible = true;
-    FlxG.debugger.drawDebug = true;
-    FlxG.log.redirectTraces = true;
+    //FlxG.debugger.drawDebug = true;
+    //FlxG.log.redirectTraces = true;
 
     FlxG.scaleMode = new FixedScaleMode();
     FlxG.camera.zoom = 1;
@@ -65,11 +65,13 @@ class DebugState extends PlayState
 
 
   private function addDebugUi():Void {
+    #if debug
     playerTrackerWindow = FlxG.debugger.track(player);
     mapDebugWindow = new MapDebugWindow(addMapRoom, setMapRoom);
-    //FlxG.game.debugger.addWindow(mapDebugWindow);
+    FlxG.game.debugger.addWindow(mapDebugWindow);
     enemyDebugWindow = new EnemyDebugWindow(addLastEnemy);
-    //FlxG.game.debugger.addWindow(enemyDebugWindow);
+    FlxG.game.debugger.addWindow(enemyDebugWindow);
+    #end
   } 
 
   private function addLastEnemy():Void {

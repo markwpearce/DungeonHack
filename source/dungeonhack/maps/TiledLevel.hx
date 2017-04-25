@@ -96,42 +96,30 @@ class TiledLevel
 			
 			if (layer.type != TiledLayerType.TILE) continue;
 			var tileLayer:TiledTileLayer = cast layer;
-      
-      tileLayer.offsetX += map.x;
-      tileLayer.offsetY += map.y;
-      
+           
 			var tileSet = getTileSetFromLayer(map, tileLayer);
 			var processedPath = getImagePathFromTileSet(tileSet);
 			
 			// could be a regular FlxTilemap if there are no animated tiles
 			var tilemap = new FlxTilemap();
-		
+      tilemap.x = map.x;
+      tilemap.y = map.y;
 			tilemap.offset.x = -tileLayer.offsetX;
 			tilemap.offset.y = -tileLayer.offsetY;
       trace("Tile Layer: "+tileLayer.name+ " type: "+tileLayer.type+" Path: "+processedPath+" FirstGID: "+tileSet.firstGID);
-			tilemap.loadMapFromArray(tileLayer.tileArray, map.width, map.height, processedPath,
+			trace('Tile layer: map size: ${map.width}x${map.height} | tile size: ${tileSet.tileWidth}x${tileSet.tileHeight}');
+      tilemap.loadMapFromArray(tileLayer.tileArray, map.width, map.height, processedPath,
 				tileSet.tileWidth, tileSet.tileHeight, OFF,
 				 tileSet.firstGID,
           1, 1);
+      
      	trace("Tilemap size: "+tilemap.totalTiles);
-			for(i in 0...15) {
-        trace(tilemap.getTileByIndex(16*i) +", "+ 
-          tilemap.getTileByIndex(16*i+1) +", "+
-          tilemap.getTileByIndex(16*i+2) +", "+
-          tilemap.getTileByIndex(16*i+3) +", "+
-          tilemap.getTileByIndex(16*i+4) +", "+
-          tilemap.getTileByIndex(16*i+5) +", "+
-          tilemap.getTileByIndex(16*i+6) +", "+
-          tilemap.getTileByIndex(16*i+7) +", "+
-          tilemap.getTileByIndex(16*i+8) +", "+
-          tilemap.getTileByIndex(16*i+9) +", "+
-          tilemap.getTileByIndex(16*i+10) +", "+
-          tilemap.getTileByIndex(16*i+11) +", "+
-          tilemap.getTileByIndex(16*i+12) +", "+
-          tilemap.getTileByIndex(16*i+13) +", "+
-          tilemap.getTileByIndex(16*i+14) +", "+
-          tilemap.getTileByIndex(16*i+15));
-
+			for(i in 0...map.height) {
+        var traceLine = "";
+        for(j in 0...map.width) {
+          traceLine += tilemap.getTileByIndex(map.width*i+j) +", ";
+        }
+        trace(traceLine);
       }
       
       

@@ -75,7 +75,7 @@ class PlayState extends FlxUIState
 		add(level.backgroundLayer);
 		
 		// Add static images
-    //	add(level.imagesLayer);
+    //add(level.imagesLayer);
 		add(deadObjectsLayer);
 		add(level.objectsLayer);
     roomPlacer = new RoomPlacer();

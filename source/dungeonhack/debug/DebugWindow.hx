@@ -241,7 +241,7 @@ class DebugWindow extends Watch {
   }
 }
 #end
-#if !DEBUG
+#if !debug
 class DebugWindow {
 
   public function new(titleText:String) {  }

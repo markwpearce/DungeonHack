@@ -29,9 +29,9 @@ class Enemy extends Character
       }
   }
 
-  private function setState(stateFunc:Float->Void):Void {
+  private function setState(stateFunc:Float->Void, stateName:String):Void {
     ai.setState(stateFunc);
-    activeStateName = ai.activeStateName;  
+    activeStateName = stateName;  
   }
 
 
@@ -39,7 +39,7 @@ class Enemy extends Character
     if(target.alive) {
       var losResult = seesTargetSprite(target, meleeStats.distance/2);
       if(losResult != LineOfSiteResult.NO_LOS) {
-        setState(chaseState);
+        setState(chaseState, "chaseState");
         secondsSinceLastSawTarget = 0;
       }
     }
@@ -49,7 +49,7 @@ class Enemy extends Character
 
   private function chaseState(elapsed:Float):Void {
     if(!target.alive) {
-      setState(idleState);  
+      setState(idleState, "idleState");  
       characterMove(elapsed);
       return;
     }
@@ -57,7 +57,7 @@ class Enemy extends Character
     
     switch(losResult) {
       case LineOfSiteResult.CLOSE: {
-        setState(meleeState);
+        setState(meleeState, "meleeState");
         secondsSinceLastSawTarget = 0;
       }
       case LineOfSiteResult.SEES :{
@@ -65,7 +65,7 @@ class Enemy extends Character
       }
       case LineOfSiteResult.NO_LOS: {
         if(secondsSinceLastSawTarget > 3) {
-          setState(idleState); 
+          setState(idleState, "idleState"); 
         }
       }
     }
@@ -79,7 +79,7 @@ class Enemy extends Character
       this.characterMelee();
     }
     else {
-      setState(chaseState);  
+      setState(chaseState,"chaseState");  
     }
     secondsSinceLastSawTarget = 0;
     characterMove(elapsed, goToTarget());
@@ -122,6 +122,6 @@ class Enemy extends Character
 
   override public function onDied() {
     super.onDied();
-    setState(deadState);
+    setState(deadState,"deadState");
   }
 }
