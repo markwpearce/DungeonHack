@@ -16,9 +16,9 @@ class Enemy extends Character
   private var activeStateName:String;
  
  
-  public function new(?X:Float=0, ?Y:Float=0,?characterSpriteSheet:FlxGraphicAsset, mHealth: Int =20, eSpeed: Int = 100)
+  public function new(?X:Float=0, ?Y:Float=0,?characterSpriteSheet:FlxGraphicAsset, mHealth: Int =20, eSpeed: Int = 100, spriteRowSize: Int = 32)
   {
-      super(CharacterType.ENEMY, mHealth, eSpeed, X, Y, characterSpriteSheet);
+      super(CharacterType.ENEMY, mHealth, eSpeed, X, Y, characterSpriteSheet,128,128, spriteRowSize);
       
       secondsSinceLastSawTarget = 1000;
       

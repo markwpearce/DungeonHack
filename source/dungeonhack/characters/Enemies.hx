@@ -99,7 +99,7 @@ class Skeleton extends Enemy {
     addAnimation("move", 4, 8);
     addAnimation("melee", 12, 4);
     addAnimation("hit", 20, 3);
-    addAnimation("die",20, 8);
+    addAnimation("die", 20, 8);
   }
 
   override public function setUpSounds() {
@@ -115,7 +115,8 @@ class Skeleton extends Enemy {
 class Minotaur extends Enemy {
 
   public function new(?X:Float=0, ?Y:Float=0) {
-    super(X, Y, AssetPaths.minotaur_alpha__png, 80, 100);
+    super(X, Y, AssetPaths.minotaur_alpha__png, 80, 100, 24);
+
     //setMelee(_cooldown: Float= 0.5, _maxDamage: Float = 10, _distance:Float = 50, _critChance:Float = 0.05, _missChance:Float =0.1)
     setMelee(0.6, 15, 60, 0.2, 0.1);
   }

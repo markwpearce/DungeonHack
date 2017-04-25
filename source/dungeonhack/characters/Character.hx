@@ -76,13 +76,17 @@ class Character extends FlxNapeSprite
   public var walkSounds: SoundCycler;
   public var meleeSounds: SoundCycler;
   public var hurtSounds: SoundCycler;
+
+  public var spriteRowCount:Int;
   
 
-  public function new(cType:CharacterType, maxHealthVal:Int=20, maxSpeedVal:Float=200, X:Float=0, Y:Float=0, ?characterSpriteSheet:FlxGraphicAsset, spriteWidth:Int=128, spriteHeight:Int=128)
+  public function new(cType:CharacterType, maxHealthVal:Int=20, maxSpeedVal:Float=200, X:Float=0, Y:Float=0,
+    ?characterSpriteSheet:FlxGraphicAsset, spriteWidth:Int=128, spriteHeight:Int=128, spriteRowCount:Int=32)
   {
     super(X, Y, null, false, true);
     type = cType;
     pointing = new MoveInput();
+    this.spriteRowCount = spriteRowCount;
     loadGraphic(characterSpriteSheet, true, spriteWidth, spriteHeight);
     origin.set(spriteWidth/2,spriteHeight*0.75);
     soundPlayer = new SoundPlayer(this);
@@ -231,8 +235,8 @@ class Character extends FlxNapeSprite
     var directions = ["l", "ul", "u", "ur", "r", "dr", "d", "dl"];
     for(i in 0...8) {
       var animName = name+"_"+directions[i];
-      var animStart:Int = start+i*32;
-      var animEnd:Int = start+numberOfFrames+i*32;
+      var animStart:Int = start+i*spriteRowCount;
+      var animEnd:Int = start+numberOfFrames+i*spriteRowCount;
 
       var frames = [for (j in animStart...animEnd) j];
 
