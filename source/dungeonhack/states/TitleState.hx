@@ -10,7 +10,7 @@ import dungeonhack.util.*;
 class TitleState extends MenuState
 {
 
-  public static var VERSION:String = "0.2.8";
+  public static var VERSION:String = "0.2.10";
 
 
 	private var byText: FlxText;
