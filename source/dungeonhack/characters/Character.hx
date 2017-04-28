@@ -3,7 +3,8 @@ package dungeonhack.characters;
 import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeSpace;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.FlxG;
+import flixel.group.FlxSpriteGroup;
+import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.tile.FlxTilemap;
 import flixel.tile.FlxBaseTilemap;
@@ -12,6 +13,8 @@ import nape.geom.RayResult;
 import nape.geom.Vec2;
 import nape.shape.ShapeList;
 import flixel.util.FlxColor;
+import flixel.FlxObject;
+import flixel.FlxSprite;
 
 import dungeonhack.ui.PopText;
 import dungeonhack.sound.*;
@@ -78,8 +81,9 @@ class Character extends FlxNapeSprite
   public var hurtSounds: SoundCycler;
 
   public var spriteRowCount:Int;
-  
 
+  public var uiSpriteGroup = new FlxTypedGroup<FlxSprite>();
+  
   public function new(cType:CharacterType, maxHealthVal:Int=20, maxSpeedVal:Float=200, X:Float=0, Y:Float=0,
     ?characterSpriteSheet:FlxGraphicAsset, spriteWidth:Int=128, spriteHeight:Int=128, spriteRowCount:Int=32)
   {
@@ -95,7 +99,9 @@ class Character extends FlxNapeSprite
     walkSounds = new SoundCycler(quietSoundPlayer, [], 500);
     hurtSounds = new SoundCycler(soundPlayer);
     
-  
+    //uiSpriteGroup.width = spriteWidth;
+    //uiSpriteGroup.height = spriteHeight;
+    
     setUpPhysics();
 
     maxHealth = maxHealthVal;
@@ -228,6 +234,8 @@ class Character extends FlxNapeSprite
      applyCooldown(elapsed);
      super.update(elapsed);
      wasAliveLastFrame = alive;
+     //uiSpriteGroup.x = x;
+     //uiSpriteGroup.y = y;
   }
 
   public function addAnimation(name:String, start:Int, numberOfFrames:Int, pingPong: Bool = false)
@@ -259,6 +267,31 @@ class Character extends FlxNapeSprite
     navigationTileMap = map;
   }
 
+
+  public function vectorToPoint(pX:Float, pY:Float): Vec2 {
+    return new Vec2(pX, pY).sub(body.position); 
+  }
+
+  public function distanceToPoint(pX:Float, pY:Float): Float {
+    return vectorToPoint(pX,pY).length; 
+  }
+
+  public function vectorToObject(targetObj:FlxObject): Vec2 {
+    return new Vec2(targetObj.x+targetObj.width/2, targetObj.y+targetObj.height/2).sub(body.position); 
+  }
+
+  public function distanceToObject(targetObj:FlxObject): Float {
+    return vectorToObject(targetObj).length; 
+  }
+  
+  public function vectorToNapeSprite(targetSprite: FlxNapeSprite): Vec2 {
+    return targetSprite.body.position.sub(body.position); 
+  }
+
+  public function distanceToNapeSprite(targetSprite: FlxNapeSprite): Float {
+    return vectorToNapeSprite(targetSprite).length; 
+  }
+  
   public function seesTargetSprite(target: FlxNapeSprite, thresholdDistance: Float = -1): LineOfSiteResult {
     return seesTarget(getBodyPosition(target.body.position), thresholdDistance);
   }

@@ -26,9 +26,7 @@ class ScreenUI extends FlxTypedGroup<FlxSprite> {
   public function new(thePlayer: Player) {
     super();
     player = thePlayer;
-    var cam = FlxG.camera;
-    //trace('UI Cam: scroll:${cam.scroll.x}x${cam.scroll.y}, size: ${cam.width}x${cam.height}, zoom: ${cam.zoom}');
-     
+    HealthBar.target = player;
     setupUI();
   }
 
@@ -49,10 +47,7 @@ class ScreenUI extends FlxTypedGroup<FlxSprite> {
     if(setup) {
       return;
     }
-   
-    var screenX= getScreenX();
-    var screenY= getScreenY();
-     
+
     hpText = new FlxText(5, 5, 100, "HP", 8);
     expText = new FlxText(5, 15, 100, "EXP", 8);
     lvlText = new FlxText(5+69, 15, 100, "LVL", 8);
@@ -81,8 +76,6 @@ class ScreenUI extends FlxTypedGroup<FlxSprite> {
     lvlText.text = "LVL "+player.level;
     healthBar.percent = (player.health / player.maxHealth)*100;
     
-
-
     super.update(elapsed);
   }
 

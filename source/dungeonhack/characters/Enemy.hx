@@ -6,6 +6,7 @@ import flixel.math.FlxPoint;
 
 
 import dungeonhack.characters.Character;
+import dungeonhack.ui.HealthBar;
 
 class Enemy extends Character
 {
@@ -14,7 +15,8 @@ class Enemy extends Character
   private var secondsSinceLastSawTarget: Float;
   private var ai:FSM;
   private var activeStateName:String;
- 
+  
+  public var healthBar:HealthBar; 
  
   public function new(?X:Float=0, ?Y:Float=0,?characterSpriteSheet:FlxGraphicAsset, mHealth: Int =20, eSpeed: Int = 100, spriteRowSize: Int = 32)
   {
@@ -27,6 +29,9 @@ class Enemy extends Character
       for(shape in body.shapes) {
         shape.userData.enemy = true;
       }
+
+      healthBar = new HealthBar(this);
+      uiSpriteGroup.add(healthBar.getSprite());
   }
 
   private function setState(stateFunc:Float->Void, stateName:String):Void {

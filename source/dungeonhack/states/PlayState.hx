@@ -124,7 +124,7 @@ class PlayState extends FlxUIState
     player = thePlayer;
     var start = (playerSpawn != null) ? playerSpawn :  getPlayerStartingLocation();
     player.setPosition(start.x,start.y);
-		level.objectsLayer.add(player);
+		addCharacterToRenderList(player);
     SoundGlobal.soundListener = player;
     	// Add foreground tiles after adding level objects, so these tiles render on top of player
 		FlxG.camera.follow(player, FlxCameraFollowStyle.TOPDOWN_TIGHT);
@@ -168,8 +168,15 @@ class PlayState extends FlxUIState
 		enemy.setNavigtaionTileMap(level.navigationMap);
 		enemy.target = player;
 		enemy.name = Type.getClassName(Type.getClass(enemy))+" "+enemies.length;
-		level.objectsLayer.add(enemy);
-		enemies.push(enemy);
+		addCharacterToRenderList(enemy);
+    add(enemy.healthBar);
+    enemies.push(enemy);
+  }
+
+
+  private function addCharacterToRenderList(char:Character) {
+    level.objectsLayer.add(char);
+    add(char.uiSpriteGroup);
   }
 
 
